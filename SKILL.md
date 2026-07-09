@@ -1,6 +1,6 @@
 ---
 name: apple-design
-description: Apple's approach to interface design and fluid, physical motion, translated for the web. Use when building or reviewing gesture-driven UI, spring animations, drag/swipe/sheet interactions, momentum and interruptible transitions, translucent materials and depth, reduced-motion, or the design foundations (feedback, spatial consistency, restraint) behind Apple-style interfaces.
+description: Apple's approach to interface design and fluid, physical motion, translated for the web. Use when building or reviewing gesture-driven UI, spring animations, drag/swipe/sheet interactions, momentum and interruptible transitions, translucent materials and depth, typography (optical sizing, tracking, leading), reduced-motion, or the design foundations (feedback, spatial consistency, restraint) behind Apple-style interfaces.
 ---
 
 # Apple Design
@@ -215,7 +215,28 @@ Also: avoid full-viewport moving backgrounds, slow looping oscillations (near 0.
 }
 ```
 
-## 15. Design foundations (from Apple's philosophy talks)
+## 15. Typography — optical sizing, tracking, leading
+
+Apple designs type to change shape with size; the same discipline applies on the web. (From *The Details of UI Typography*, WWDC 2020.)
+
+- **Tracking (letter-spacing) is size-specific — never one value for all sizes.** Large display text wants *negative* tracking (letters read too far apart as they grow); small text wants slightly *positive* tracking for legibility. A fixed `letter-spacing` is wrong somewhere. Tighten headings, leave body near `0`.
+- **Leading (line-height) tracks size inversely.** Tight on large headings, looser on body copy. Increase it for scripts with tall ascenders/descenders; tighten it for dense, information-heavy UI.
+- **Build hierarchy from weight + size + leading as a set,** not size alone. Emphasize with weight — it adds presence without taking more space.
+- **Respect the user's text-size setting** (Dynamic Type). Scale layout *with* the text — spacing in `rem`/`em`, not fixed px — so a larger font doesn't break the layout.
+- **Default to the platform's system font** before a custom face; it already ships optical sizing, tracking tables, and legibility tuning. Override only with a reason.
+
+```css
+:root { font: 100%/1.5 system-ui, sans-serif; } /* body: system font, comfortable leading */
+
+.display {
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 1.05;        /* tight leading for large text */
+  letter-spacing: -0.02em;  /* negative tracking as it grows */
+  font-optical-sizing: auto;
+}
+```
+
+## 16. Design foundations (from Apple's philosophy talks)
 
 The motion above sits on top of durable design principles:
 
@@ -230,7 +251,7 @@ The motion above sits on top of durable design principles:
 - **Consistency**, internal and external. Reuse the same term/icon/interaction for the same meaning; adopt platform conventions unless you have a strong reason not to.
 - **Restraint.** Quality "doesn't try to do more than it needs to." Nothing is random — every spacing, timing, and alignment value is a deliberate choice you can defend. Make committed, specific choices instead of averaging toward blandness; offer customization at the edges, not by diluting the core.
 
-## 16. Process
+## 17. Process
 
 - **Prototype interactively — an interactive demo is worth "a million static designs."** You discover the interface by building and playing with it; a working prototype also sets a concrete bar that prevents a mediocre final implementation.
 - **Design interaction and visuals together.** "You shouldn't be able to tell where one ends and the other begins." Motion is not a layer added after the pixels.
@@ -252,4 +273,5 @@ The motion above sits on top of durable design principles:
 | Feedback | On pointer-down, continuous | never only at the end |
 | Boundary | Rubber-band, don't hard-stop | progressive resistance |
 | Translucent chrome | `backdrop-filter` layer | content scrolls under |
+| Type tracking | Size-specific, never fixed | tighten large text (`-0.02em`), body near `0` |
 | Reduced motion | Cross-fade, not slide/spring | `@media (prefers-reduced-motion)` |
