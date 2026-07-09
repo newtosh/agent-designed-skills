@@ -1,9 +1,9 @@
 ---
-name: apple-motion-design
-description: Apple's principles for fluid, physical motion and interaction — distilled from WWDC talks (Designing Fluid Interfaces, Essential Design Principles, The Qualities of Great Design, Advanced Animations with UIKit, and Apple's motion/materials guidance) and translated for building web UIs. Covers direct manipulation, interruptible spring motion, velocity handoff, momentum projection, spatial consistency, materials/depth, multimodal feedback, and reduced-motion.
+name: apple-design
+description: Apple's approach to interface design and fluid, physical motion, translated for the web. Use when building or reviewing gesture-driven UI, spring animations, drag/swipe/sheet interactions, momentum and interruptible transitions, translucent materials and depth, reduced-motion, or the design foundations (feedback, spatial consistency, restraint) behind Apple-style interfaces.
 ---
 
-# Apple Motion Design
+# Apple Design
 
 How Apple builds interfaces that stop feeling like a computer and start feeling like an extension of you. This knowledge comes from Apple's WWDC design talks — chiefly *Designing Fluid Interfaces* (WWDC 2018) — distilled and translated into the web platform (CSS, Pointer Events, `requestAnimationFrame`, spring libraries like Motion/Framer Motion).
 
@@ -15,7 +15,7 @@ The through-line: **an interface feels alive when motion starts from the current
 
 An interface is fluid when it behaves like the physical world: things respond instantly, move continuously, carry momentum, resist at boundaries, and can be redirected mid-motion. Everything below is a way to get closer to that.
 
-Apple frames design as serving four human needs: **safety/predictability, understanding, achievement, and joy.** Every rule here serves one of them. The only thing that matters is how well the interface satisfies the emotional and practical needs of the person using it.
+Apple frames design as serving four human needs: **safety/predictability, understanding, achievement, and joy.** Every rule here serves one of them.
 
 ## 1. Response — kill latency
 
