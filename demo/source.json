@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "provider": "Neuform",
+  "synced_at": "2026-07-18T06:40:35.259Z",
+  "skill": {
+    "id": "beautiful-shadows",
+    "label": "Beautiful Shadows",
+    "usage_count": 1447,
+    "url": "https://neuform.ai/skill/beautiful-shadows"
+  },
+  "ranking": {
+    "position": 1,
+    "order": [
+      "view_count desc",
+      "community_favorite_count desc",
+      "relation_created_at desc"
+    ],
+    "visible_design_count": 1
+  },
+  "design": {
+    "id": "7812748c-5b49-4ad8-ad76-880860406fb0",
+    "slug": "auralis-neural-audio-engine",
+    "title": "Auralis - Neural Audio Engine",
+    "url": "https://neuform.ai/pages/auralis-neural-audio-engine/index.html",
+    "view_count": 1953,
+    "favorite_count": 80,
+    "remix_count": 39
+  },
+  "html": {
+    "original_sha256": "20b3fb411ebda39d7673aecba46b12fd262861676915aedfaa07587e2a55fec6",
+    "bundled_sha256": "20b3fb411ebda39d7673aecba46b12fd262861676915aedfaa07587e2a55fec6",
+    "runtime_dependencies": [
+      "https://cdn.tailwindcss.com",
+      "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js",
+      "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js",
+      "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js",
+      "https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js",
+      "https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap"
+    ]
+  },
+  "assets": {
+    "preview": "assets/source-preview.jpg",
+    "bundled": [],
+    "skipped": []
+  }
+}
