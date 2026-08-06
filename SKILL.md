@@ -8,7 +8,7 @@ description: >-
 
 A strong interface is not six independent audits stapled together. Review the whole experience, let each `better-*` skill own its domain rules, then consolidate the evidence into one prioritized verdict.
 
-This skill owns orchestration only. Accessibility rules belong to `better-accessibility`; structure to `better-layout`; copy to `better-writing`; type to `better-typography`; color to `better-colors`; visual polish and motion to `better-ui`. Never duplicate or override their rules here. Change-scoped review — uncommitted work, branches, and pull requests — belongs to `better-review`, which resolves the scope and classifies findings before handing the review back here.
+This skill owns orchestration only. Accessibility rules belong to `better-accessibility`; structure to `better-layout`; copy to `better-writing`; type to `better-typography`; color to `better-colors`; visual polish and motion to `better-ui`. Never duplicate or override their rules here. Change-scoped review — uncommitted work, branches, and pull requests — belongs to `interface-review`, which resolves the scope and classifies findings before handing the review back here.
 
 ## Core Principles
 
@@ -23,7 +23,7 @@ Infer the screen, flow, feature, or repository scope from the request and curren
 
 If the requested scope is too large to inspect credibly, narrow it to the highest-traffic complete flow and state the boundary. Never imply uninspected surfaces were reviewed.
 
-When the request names a branch, pull request, commit range, or uncommitted changes, hand scope resolution to `better-review` and keep this file's severity, consolidation, cap, and verdict.
+When the request names a branch, pull request, commit range, or uncommitted changes, hand scope resolution to `interface-review` and keep this file's severity, consolidation, cap, and verdict.
 
 ### 2. Recon Before Judgment
 
