@@ -10,6 +10,12 @@ A strong interface is not six independent audits stapled together. Review the wh
 
 This skill owns orchestration only. Accessibility rules belong to `better-accessibility`; structure to `better-layout`; copy to `better-writing`; type to `better-typography`; color to `better-colors`; visual polish and motion to `better-ui`. Never duplicate or override their rules here. Change-scoped review — uncommitted work, branches, and pull requests — belongs to `interface-review`, which resolves the scope and classifies findings before handing the review back here.
 
+## Quick Reference
+
+| Category | When to Use |
+| --- | --- |
+| [Example Report](example-report.md) | A complete worked report — scope block, coverage, statuses, consolidation, rejected candidates, verification, verdict |
+
 ## Core Principles
 
 ### 1. Resolve Scope and Mode First
@@ -20,10 +26,10 @@ Infer the screen, flow, feature, or repository scope from the request and curren
 
 | Mode | Coverage | Finding cap |
 | --- | --- | --- |
-| `quick` | Primary user path and highest-traffic states; report only `HIGH` and `MEDIUM` issues | 5 |
+| `quick` | The primary path through the scope and the states it actually reaches; report only `HIGH` and `MEDIUM` issues | 5 |
 | `full` | Entire requested scope across all six domain skills, including empty, loading, error, and narrow-width states when present | 15 |
 
-If the requested scope is too large to inspect credibly, narrow it to the highest-traffic complete flow and state the boundary. Never imply uninspected surfaces were reviewed.
+If the requested scope is too large to inspect credibly, narrow it to one complete flow — the one the request itself centers on, or failing that the entry path every user of the scope must pass through — and state the boundary and what it excluded. Never imply uninspected surfaces were reviewed.
 
 When the request names a branch, pull request, commit range, or uncommitted changes, hand scope resolution to `interface-review`. It returns the resolved change scope, the affected surfaces, and a status for each finding; severity, consolidation, the cap, the output format, and the verdict stay here, under **Change-Scoped Reviews** below.
 
@@ -121,7 +127,7 @@ Treat a review request as read-only. Do not edit source code unless the user als
 
 ## Review Output Format
 
-Always use the following sections.
+Always use the following sections. [Example Report](example-report.md) shows all of them filled in end to end; read it before writing the first one.
 
 ### Scope and Coverage
 
