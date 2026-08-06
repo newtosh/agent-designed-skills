@@ -8,13 +8,7 @@ description: >-
 
 A strong interface is not six independent audits stapled together. Review the whole experience, let each `better-*` skill own its domain rules, then consolidate the evidence into one prioritized verdict.
 
-This skill owns orchestration only. Accessibility rules belong to `better-accessibility`; structure to `better-layout`; copy to `better-writing`; type to `better-typography`; color to `better-colors`; visual polish and motion to `better-ui`. Never duplicate or override their rules here. Change-scoped review — uncommitted work, branches, and pull requests — belongs to `interface-review`, which resolves the scope and classifies findings before handing the review back here.
-
-## Quick Reference
-
-| Category | When to Use |
-| --- | --- |
-| [Example Report](example-report.md) | A complete worked report — scope block, coverage, statuses, consolidation, rejected candidates, verification, verdict |
+This skill owns orchestration only. Accessibility rules belong to `better-accessibility`; structure to `better-layout`; copy to `better-writing`; type to `better-typography`; color to `better-colors`; visual polish and motion to `better-ui`. Never duplicate or override their rules here. Change-scoped review of uncommitted work, branches, and pull requests belongs to `interface-review`, which resolves the scope and classifies findings before handing the review back here.
 
 ## Core Principles
 
@@ -29,19 +23,17 @@ Infer the screen, flow, feature, or repository scope from the request and curren
 | `quick` | The primary path through the scope and the states it actually reaches; report only `HIGH` and `MEDIUM` issues | 5 |
 | `full` | Entire requested scope across all six domain skills, including empty, loading, error, and narrow-width states when present | 15 |
 
-If the requested scope is too large to inspect credibly, narrow it to one complete flow — the one the request itself centers on, or failing that the entry path every user of the scope must pass through — and state the boundary and what it excluded. Never imply uninspected surfaces were reviewed.
+If the requested scope is too large to inspect credibly, narrow it to one complete flow: the one the request itself centers on, or failing that the entry path every user of the scope must pass through. State the boundary and what it excluded. Never imply uninspected surfaces were reviewed.
 
 When the request names a branch, pull request, commit range, or uncommitted changes, hand scope resolution to `interface-review`. It returns the resolved change scope, the affected surfaces, and a status for each finding; severity, consolidation, the cap, the output format, and the verdict stay here, under **Change-Scoped Reviews** below.
 
 ### 2. Recon Before Judgment
 
-Identify the framework, styling system, component library, design tokens, supported viewports, and available preview or test commands. Write every proposed fix in the project's own idiom — its Tailwind, plain CSS, or CSS-in-JS, its tokens, its component patterns — so a finding never arrives as a request to adopt a different stack. That governs the form of the fix, not whether the current implementation is good enough.
+Identify the framework, styling system, component library, design tokens, supported viewports, and available preview or test commands. Write every fix in the project's own idiom so no finding arrives as a request to adopt a different stack. That governs the form of the fix, not whether the current code is good enough.
 
-Then find what the project has already written down about its own interface: `CONTRIBUTING.md`, `CODING_STANDARDS.md`, `AGENTS.md`, `CLAUDE.md`, a design-system or component-guidelines doc, Storybook docs pages, and any ADR covering the interface. Name in the output which of these you found, or state that the project documents none.
+Then read what the project has written about its own interface: `CONTRIBUTING.md`, `CODING_STANDARDS.md`, `AGENTS.md`, `CLAUDE.md`, a design-system doc, Storybook docs, interface ADRs. Name in the output which you found, or that there are none.
 
-Read them for context and leverage, not for permission. They tell you what is deliberate, what vocabulary to use, and where a fix belongs — but a documented convention is not evidence that the convention is good, and "it's in the style guide" does not retire a finding. The point of the review is to make the interface better, including where the project has written the weaker choice down.
-
-What they change is **where** you report, not **whether**. When a documented convention or a shared token is the cause, report it once against that source instead of once per component: the finding is the ramp, the scale, or the guideline, and the components are its locations. That is the highest-leverage fix available and it is the reason to read these files at all.
+Read them for leverage, not permission. A documented convention is not evidence the convention is good, and "it's in the style guide" does not retire a finding. What they change is **where** you report: when a guideline or shared token is the cause, report it once against that source with the components as its locations.
 
 ### 3. Use Domain Skills as the Sources of Truth
 
@@ -76,7 +68,7 @@ Use one shared severity scale:
 
 Within a severity, rank by reach and leverage. A token or shared-component fix outranks the same symptom in one leaf component.
 
-**Escalation triggers.** Once the owning skill confirms one of these, it is `HIGH` on sight. Do not deliberate, do not average it down because the surface is minor, and do not hold it back in `quick` mode:
+**Escalation triggers.** Once the owning skill confirms one of these, it is `HIGH` on sight, not averaged down because the surface is minor and not withheld in `quick` mode:
 
 - An interactive control with no accessible name.
 - A keyboard-reachable control with no visible focus indicator.
@@ -87,9 +79,9 @@ Within a severity, rank by reach and leverage. A token or shared-component fix o
 - State or meaning carried by color alone.
 - A destructive action with no confirmation, undo, or distinct treatment.
 
-Triggers rank above every other finding, so when more of them fire than the mode's cap allows, list them first and state how many further findings the cap excluded. A cap may shorten the report; it may never be the reason a blocker went unreported.
+Triggers rank above every other finding. When more fire than the cap allows, list them first and state how many findings the cap excluded; a cap may shorten a report but may never be why a blocker went unreported.
 
-These name symptoms the owning skills already define; they set severity, not new rules. The owner still decides whether the symptom is present — `better-accessibility` for a name or a focus ring, `better-colors` for a measured pair — and this list decides what it costs. In a change review, a confirmed `Regression` against any trigger is `HIGH` even when the same symptom would rank `MEDIUM` as a pre-existing issue, because the change is what removed it.
+These set severity, not new rules. The owning skill still decides whether the symptom is present, and this list decides what it costs. In a change review, a confirmed `Regression` against a trigger is `HIGH` even where the same symptom would be `MEDIUM` as pre-existing.
 
 ### 6. Consolidate Systemic Findings
 
@@ -123,11 +115,11 @@ Treat a review request as read-only. Do not edit source code unless the user als
 | “Approve” with pending actionable findings | Use `Needs changes` or `Block` |
 | Every legacy issue in a touched file reported | Cap pre-existing findings at three in their own section |
 | A pre-existing issue blocking a change review | Keep pre-existing findings out of the cap and out of the verdict |
-| Domain marked `Clear` when the change never touched it | Mark it `Not reviewed — no evidence in the change scope` |
+| Domain marked `Clear` when the change never touched it | Mark it `Not reviewed: no evidence in the change scope` |
 
 ## Review Output Format
 
-Always use the following sections. [Example Report](example-report.md) shows all of them filled in end to end; read it before writing the first one.
+Always use the following sections.
 
 ### Scope and Coverage
 
@@ -167,16 +159,16 @@ List each check or interaction, the exact command or steps, and the observed res
 
 End with exactly one:
 
-- `Block` — one or more `HIGH` findings remain.
-- `Needs changes` — only `MEDIUM` or `LOW` findings remain.
-- `Approve` — no actionable findings remain and the claimed coverage was verified.
+- `Block`: one or more `HIGH` findings remain.
+- `Needs changes`: only `MEDIUM` or `LOW` findings remain.
+- `Approve`: no actionable findings remain and the claimed coverage was verified.
 
 ### Change-Scoped Reviews
 
-When `interface-review` resolved the scope from version control, the format above applies with these four additions. They belong here because this file owns the format, the cap, and the verdict; `interface-review` supplies the resolved scope and the per-finding status.
+When `interface-review` resolved the scope from version control, the format above applies with these four additions. They live here because this file owns the format, the cap, and the verdict; `interface-review` supplies the scope and the statuses.
 
-1. **Scope block.** Open **Scope and Coverage** with the change scope table `interface-review` produced — target, base and head refs, commit and file counts, exclusions, surfaces expanded — then the coverage table above, unchanged, covering all six domains. A domain with no evidence anywhere in the change scope is `Not reviewed — no evidence in the change scope`, which is a coverage statement rather than a gap.
-2. **Status column.** The findings table gains a `Status` column after `Domain`, carrying `Introduced` or `Regression` as `interface-review` classified it:
+1. **Scope block.** Open **Scope and Coverage** with the change scope table `interface-review` produced, then the coverage table above unchanged. A domain with no evidence in the change scope is `Not reviewed: no evidence in the change scope`, which is a coverage statement, not a gap.
+2. **Status column.** The findings table gains a `Status` column after `Domain`, carrying `Introduced` or `Regression`:
 
    | # | Severity | Domain | Status | Location | Before | After | Why |
    | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -184,10 +176,10 @@ When `interface-review` resolved the scope from version control, the format abov
 
    With no `Introduced` or `Regression` findings, omit the table and state "No actionable interface findings in this change."
 
-3. **Pre-existing section.** Place it after **Considered but Rejected**. At most three, highest severity first, and state plainly that they are not this change's responsibility. Omit the section when there are none.
+3. **Pre-existing section.** Place it after **Considered but Rejected**, at most three, highest severity first, stated plainly as not this change's responsibility. Omit when there are none.
 
    | Severity | Domain | Location | Issue |
    | --- | --- | --- | --- |
    | MEDIUM | Typography | `src/Toolbar.tsx:7` | Numeric badges use proportional figures; predates this change |
 
-4. **Cap and verdict.** The mode's finding cap and the verdict both cover `Introduced` and `Regression` findings only. `Pre-existing` findings sit outside the cap, so a change touching a legacy file cannot turn into a full-file audit, and outside the verdict, so a change whose only findings are pre-existing is an `Approve`.
+4. **Cap and verdict.** Both cover `Introduced` and `Regression` only. `Pre-existing` findings sit outside the cap, so touching a legacy file cannot turn into a full-file audit, and outside the verdict, so a change whose only findings are pre-existing is an `Approve`.
