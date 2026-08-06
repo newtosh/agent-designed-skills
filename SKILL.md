@@ -14,7 +14,9 @@ This skill owns orchestration only. Accessibility rules belong to `better-access
 
 ### 1. Resolve Scope and Mode First
 
-Infer the screen, flow, feature, or repository scope from the request and current workspace. State the resolved scope in the output. Use `full` when no mode is supplied.
+Parse the invocation as `[quick|full] [scope]`. The first token is a mode only when it is exactly `quick` or `full`; anything else is part of the scope. Mode defaults to `full`.
+
+Infer the screen, flow, feature, or repository scope from the request and current workspace. State the resolved scope in the output.
 
 | Mode | Coverage | Finding cap |
 | --- | --- | --- |
@@ -23,7 +25,7 @@ Infer the screen, flow, feature, or repository scope from the request and curren
 
 If the requested scope is too large to inspect credibly, narrow it to the highest-traffic complete flow and state the boundary. Never imply uninspected surfaces were reviewed.
 
-When the request names a branch, pull request, commit range, or uncommitted changes, hand scope resolution to `interface-review` and keep this file's severity, consolidation, cap, and verdict.
+When the request names a branch, pull request, commit range, or uncommitted changes, hand scope resolution to `interface-review`. It returns the resolved change scope, the affected surfaces, and a status for each finding; severity, consolidation, the cap, the output format, and the verdict stay here, under **Change-Scoped Reviews** below.
 
 ### 2. Recon Before Judgment
 
@@ -92,6 +94,9 @@ Treat a review request as read-only. Do not edit source code unless the user als
 | No rejected candidates | Include the required considered-but-rejected table |
 | Review silently edits code | Stay read-only unless implementation was requested |
 | “Approve” with pending actionable findings | Use `Needs changes` or `Block` |
+| Every legacy issue in a touched file reported | Cap pre-existing findings at three in their own section |
+| A pre-existing issue blocking a change review | Keep pre-existing findings out of the cap and out of the verdict |
+| Domain marked `Clear` when the change never touched it | Mark it `Not reviewed — no evidence in the change scope` |
 
 ## Review Output Format
 
@@ -138,3 +143,24 @@ End with exactly one:
 - `Block` — one or more `HIGH` findings remain.
 - `Needs changes` — only `MEDIUM` or `LOW` findings remain.
 - `Approve` — no actionable findings remain and the claimed coverage was verified.
+
+### Change-Scoped Reviews
+
+When `interface-review` resolved the scope from version control, the format above applies with these four additions. They belong here because this file owns the format, the cap, and the verdict; `interface-review` supplies the resolved scope and the per-finding status.
+
+1. **Scope block.** Open **Scope and Coverage** with the change scope table `interface-review` produced — target, base and head refs, commit and file counts, exclusions, surfaces expanded — then the coverage table above, unchanged, covering all six domains. A domain with no evidence anywhere in the change scope is `Not reviewed — no evidence in the change scope`, which is a coverage statement rather than a gap.
+2. **Status column.** The findings table gains a `Status` column after `Domain`, carrying `Introduced` or `Regression` as `interface-review` classified it:
+
+   | # | Severity | Domain | Status | Location | Before | After | Why |
+   | --- | --- | --- | --- | --- | --- | --- | --- |
+   | 1 | HIGH | Accessibility | Regression | `src/Dialog.tsx:42` | `aria-label="Close"` removed in this change | Restore `aria-label="Close"` on the icon-only control | The close control had an accessible name before this change and no longer does |
+
+   With no `Introduced` or `Regression` findings, omit the table and state "No actionable interface findings in this change."
+
+3. **Pre-existing section.** Place it after **Considered but Rejected**. At most three, highest severity first, and state plainly that they are not this change's responsibility. Omit the section when there are none.
+
+   | Severity | Domain | Location | Issue |
+   | --- | --- | --- | --- |
+   | MEDIUM | Typography | `src/Toolbar.tsx:7` | Numeric badges use proportional figures; predates this change |
+
+4. **Cap and verdict.** The mode's finding cap and the verdict both cover `Introduced` and `Regression` findings only. `Pre-existing` findings sit outside the cap, so a change touching a legacy file cannot turn into a full-file audit, and outside the verdict, so a change whose only findings are pre-existing is an `Approve`.
