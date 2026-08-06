@@ -29,7 +29,13 @@ When the request names a branch, pull request, commit range, or uncommitted chan
 
 ### 2. Recon Before Judgment
 
-Identify the framework, styling system, component library, design tokens, supported viewports, and available preview or test commands. Follow the project's established Tailwind, plain CSS, CSS-in-JS, token, and component conventions.
+Identify the framework, styling system, component library, design tokens, supported viewports, and available preview or test commands. Write every proposed fix in the project's own idiom — its Tailwind, plain CSS, or CSS-in-JS, its tokens, its component patterns — so a finding never arrives as a request to adopt a different stack. That governs the form of the fix, not whether the current implementation is good enough.
+
+Then find what the project has already written down about its own interface: `CONTRIBUTING.md`, `CODING_STANDARDS.md`, `AGENTS.md`, `CLAUDE.md`, a design-system or component-guidelines doc, Storybook docs pages, and any ADR covering the interface. Name in the output which of these you found, or state that the project documents none.
+
+Read them for context and leverage, not for permission. They tell you what is deliberate, what vocabulary to use, and where a fix belongs — but a documented convention is not evidence that the convention is good, and "it's in the style guide" does not retire a finding. The point of the review is to make the interface better, including where the project has written the weaker choice down.
+
+What they change is **where** you report, not **whether**. When a documented convention or a shared token is the cause, report it once against that source instead of once per component: the finding is the ramp, the scale, or the guideline, and the components are its locations. That is the highest-leverage fix available and it is the reason to read these files at all.
 
 ### 3. Use Domain Skills as the Sources of Truth
 
@@ -64,13 +70,28 @@ Use one shared severity scale:
 
 Within a severity, rank by reach and leverage. A token or shared-component fix outranks the same symptom in one leaf component.
 
+**Escalation triggers.** Once the owning skill confirms one of these, it is `HIGH` on sight. Do not deliberate, do not average it down because the surface is minor, and do not hold it back in `quick` mode:
+
+- An interactive control with no accessible name.
+- A keyboard-reachable control with no visible focus indicator.
+- A control or path reachable by pointer but not by keyboard.
+- Motion or auto-playing content that ignores `prefers-reduced-motion`.
+- Content or a control clipped, overlapped, or unreachable at 320px width or 200% zoom.
+- Body or control text whose rendered contrast pair fails its required ratio.
+- State or meaning carried by color alone.
+- A destructive action with no confirmation, undo, or distinct treatment.
+
+Triggers rank above every other finding, so when more of them fire than the mode's cap allows, list them first and state how many further findings the cap excluded. A cap may shorten the report; it may never be the reason a blocker went unreported.
+
+These name symptoms the owning skills already define; they set severity, not new rules. The owner still decides whether the symptom is present — `better-accessibility` for a name or a focus ring, `better-colors` for a measured pair — and this list decides what it costs. In a change review, a confirmed `Regression` against any trigger is `HIGH` even when the same symptom would rank `MEDIUM` as a pre-existing issue, because the change is what removed it.
+
 ### 6. Consolidate Systemic Findings
 
 One root cause is one finding. List every confirmed location in the same row rather than producing a row per occurrence. Do not pad the report to reach the finding cap; a short review or no findings is a valid result.
 
 ### 7. Make Restraint Visible
 
-Record candidates considered but deliberately rejected. A candidate is rejected when the owning skill permits the current implementation, evidence is insufficient, the project convention is intentional, or the proposed change would add complexity without user benefit.
+Record candidates considered but deliberately rejected. A candidate is rejected when the owning skill permits the current implementation, evidence is insufficient, the project's convention is a defensible choice and not merely an established one, or the proposed change would add complexity without user benefit.
 
 ### 8. Verify What Can Be Verified
 
@@ -104,7 +125,7 @@ Always use the following sections.
 
 ### Scope and Coverage
 
-State the mode, exact scope, stack and styling conventions, and any review boundary. Then show coverage:
+State the mode, exact scope, stack and styling conventions, the project convention documents found in recon, and any review boundary. Then show coverage:
 
 | Domain | Evidence inspected | Result |
 | --- | --- | --- |
