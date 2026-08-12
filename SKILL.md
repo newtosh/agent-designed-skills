@@ -1,7 +1,7 @@
 ---
 name: better-interface
 description: >-
-  User-invoked, cross-discipline interface review: routes a screen, flow, feature, or product interface to every `better-*` domain skill and consolidates one ranked verdict. Use when asked for a holistic review rather than a single domain. Triggers on better-interface, holistic interface review, review the whole screen.
+  Cross-discipline interface review: routes a screen, flow, feature, or product interface to every `better-*` domain skill and consolidates one ranked verdict. Use when asked for a holistic review rather than a single domain, and when `interface-review` hands up a change to route. Triggers on better-interface, holistic interface review, review the whole screen.
 ---
 
 # Review the interface as one system
@@ -25,7 +25,9 @@ Infer the screen, flow, feature, or repository scope from the request and curren
 
 If the requested scope is too large to inspect credibly, narrow it to one complete flow: the one the request itself centers on, or failing that the entry path every user of the scope must pass through. State the boundary and what it excluded. Never imply uninspected surfaces were reviewed.
 
-When the request names a branch, pull request, commit range, or uncommitted changes, hand scope resolution to `interface-review`. It returns the resolved change scope, the affected surfaces, and a status for each finding; severity, consolidation, the cap, the output format, and the verdict stay here, under **Change-Scoped Reviews** below.
+When the request names a branch, pull request, commit range, or uncommitted changes, that is a change review, not a screen review. Say so and ask the user to run `interface-review`; it is user-invoked, so this skill cannot start it. Never resolve a change scope here: reading a diff, classifying findings, and expanding changed files to affected surfaces are all `interface-review`'s, and guessing at them produces a report whose scope nobody can check.
+
+`interface-review` hands the review back the other way. When it does, it supplies the resolved change scope, the affected surfaces, and a status for each finding; severity, consolidation, the cap, the output format, and the verdict stay here, under **Change-Scoped Reviews** below.
 
 ### 2. Recon Before Judgment
 
