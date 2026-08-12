@@ -48,7 +48,7 @@ Review in this order so foundational failures are not hidden by polish:
 5. `better-colors`
 6. `better-ui`
 
-This skill owns the final response. When a domain skill is loaded through `better-interface`, apply its principles and references but ignore its standalone **Review Output Format**. Use the consolidated format, shared severity, and finding cap in this file instead.
+This skill owns the final response. When a domain skill is loaded through `better-interface`, apply its principles and references but ignore its **Reporting** section and the `review-output.md` it points at. Use the consolidated format, shared severity, and finding cap in this file instead.
 
 If an owning skill is unavailable, mark that domain `Not reviewed`, name the missing skill, and continue with the remaining domains. Do not recreate its rules from memory, substitute a neighboring skill, or claim holistic coverage.
 
