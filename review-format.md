@@ -14,7 +14,7 @@ Include every domain listed under `better-interface`'s **Use domain skills as th
 
 ## Findings
 
-One table, ordered by severity, then reach and leverage:
+One table, ordered by severity, then by reach:
 
 | # | Severity | Domain | Location | Before | After | Why |
 | --- | --- | --- | --- | --- | --- | --- |

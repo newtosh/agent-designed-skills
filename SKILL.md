@@ -50,7 +50,7 @@ Identify the framework, styling system, component library, design tokens, suppor
 
 Then read what the project has written about its own interface: `CONTRIBUTING.md`, `CODING_STANDARDS.md`, `AGENTS.md`, `CLAUDE.md`, a design-system doc, Storybook docs, interface ADRs. Name in the output which you found, or that there are none.
 
-Read them for leverage, not permission. A documented convention is no evidence the convention is good, and "it's in the style guide" does not retire a finding. What they change is **where** you report. When a guideline or a shared token is the cause, report it once against that source, with the components as its locations.
+Read them to find where a finding belongs, not for permission to drop it. A documented convention is no evidence the convention is good, and "it's in the style guide" does not retire a finding. What they change is **where** you report. When a guideline or a shared token is the cause, report it once against that source, with the components as its locations.
 
 ### 4. Use domain skills as the sources of truth
 
@@ -83,7 +83,7 @@ Use one shared severity scale:
 - `MEDIUM`: meaningfully harms comprehension, efficiency, adaptability, or consistency.
 - `LOW`: isolated polish with limited task impact. Include only in `full` mode.
 
-Within a severity, rank by reach and leverage. A token or shared-component fix outranks the same symptom in one leaf component.
+Within a severity, rank by how many places the finding reaches and how much one fix buys. A token or shared-component fix outranks the same symptom in one leaf component.
 
 **Escalation triggers.** Once the owning skill confirms one of these, it is `HIGH` on sight, not averaged down because the surface is minor and not withheld in `quick` mode:
 
