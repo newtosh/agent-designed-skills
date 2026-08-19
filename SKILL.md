@@ -73,7 +73,7 @@ When two skills appear to cover the same issue, assign it to the skill that owns
 
 ### 5. Require evidence
 
-Every finding cites `path/to/file:line` and shows the current implementation. If the review artifact has no source files, cite the exact screen and component. Do not report a code-level finding from visual appearance alone or a visual finding from source code alone when runtime behavior determines the result.
+Every finding cites `path/to/file:line` and shows the current implementation. Do not report a code-level finding from visual appearance alone or a visual finding from source code alone when runtime behavior determines the result.
 
 ### 6. Rank by user impact
 
