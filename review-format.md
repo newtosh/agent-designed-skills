@@ -12,7 +12,7 @@ State the mode, exact scope, stack and styling conventions, the project conventi
 | --- | --- | --- |
 | Accessibility | Files, components, states, or checks | Findings count or `Clear` |
 
-Include every domain listed in principle 3. `Clear` means inspected with no actionable finding; `Not reviewed` must explain why.
+Include every domain listed under `better-interface`'s **Use domain skills as the sources of truth**. `Clear` means inspected with no actionable finding; `Not reviewed` must explain why.
 
 ## Findings
 
@@ -22,7 +22,7 @@ One table, ordered by severity, then reach and leverage:
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | HIGH | Accessibility | `src/Dialog.tsx:42` | `<button><XIcon /></button>` | Add `aria-label="Close"` and hide the icon from the accessibility tree | The icon-only control has no accessible name |
 
-- **Severity** comes from principle 5 here, and from the domain skill's own ladder in a standalone review.
+- **Severity** comes from `better-interface`'s **Rank by user impact** in an orchestrated review, and from the domain skill's own ladder in a standalone one.
 - **Location** cites `path/to/file:line`. Cite the exact screen and component when the artifact has no source files.
 - **Before / After** show the current implementation and an actionable replacement. Never split them into separate "Before:" and "After:" lines.
 - **Why** names the violated principle and its user impact.

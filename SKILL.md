@@ -26,9 +26,11 @@ Infer the screen, flow, feature, or repository scope from the request and curren
 | Mode | Coverage | Finding cap |
 | --- | --- | --- |
 | `quick` | The primary path through the scope and the states it actually reaches; report only `HIGH` and `MEDIUM` issues | 5 |
-| `full` | Entire requested scope across every domain skill listed in principle 3, including empty, loading, error, and narrow-width states when present | 15 |
+| `full` | Entire requested scope across every domain skill listed under **Use domain skills as the sources of truth**, including empty, loading, error, and narrow-width states when present | 15 |
 
 When the requested scope is too large to inspect credibly, narrow it to one complete flow. Take the flow the request centers on. Failing that, take the entry path every user of the scope must pass through. State the boundary and what it excluded. Never imply uninspected surfaces were reviewed.
+
+### 2. Send a change to `interface-review`
 
 When the request names a branch, pull request, commit range, or uncommitted changes, that is a change review, not a screen review. Say so and ask the user to run `interface-review`. It is user-invoked, so this skill cannot start it.
 
@@ -36,7 +38,7 @@ Never resolve a change scope here. Reading a diff, classifying findings, and exp
 
 When `interface-review` hands a review back, it supplies the change scope, the affected surfaces, and a status per finding. Everything from severity onward stays here, with the four additions in [review-format.md](review-format.md).
 
-### 2. Recon before judgment
+### 3. Recon before judgment
 
 Identify the framework, styling system, component library, design tokens, supported viewports, and any preview or test command. Write every fix in the project's own idiom, so no finding arrives as a request to adopt a different stack. That governs the form of the fix, not whether the current code is good enough.
 
@@ -44,7 +46,7 @@ Then read what the project has written about its own interface: `CONTRIBUTING.md
 
 Read them for leverage, not permission. A documented convention is no evidence the convention is good, and "it's in the style guide" does not retire a finding. What they change is **where** you report. When a guideline or a shared token is the cause, report it once against that source, with the components as its locations.
 
-### 3. Use domain skills as the sources of truth
+### 4. Use domain skills as the sources of truth
 
 Before reviewing, confirm that every owning skill below is available. Load and apply every available owner. In `quick` mode, inspect every domain but spend depth only where the primary flow has evidence. In `full` mode, complete each available domain review before consolidation.
 
@@ -63,11 +65,11 @@ If an owning skill is unavailable, mark that domain `Not reviewed`, name the mis
 
 When two skills appear to cover the same issue, assign it to the skill that owns the underlying rule and mention secondary effects in the **Why** cell. Report it once.
 
-### 4. Require evidence
+### 5. Require evidence
 
 Every finding cites `path/to/file:line` and shows the current implementation. If the review artifact has no source files, cite the exact screen and component. Do not report a code-level finding from visual appearance alone or a visual finding from source code alone when runtime behavior determines the result.
 
-### 5. Rank by user impact
+### 6. Rank by user impact
 
 Use one shared severity scale:
 
@@ -92,11 +94,11 @@ Triggers rank above every other finding. When more fire than the cap allows, lis
 
 These set severity, not new rules. The owning skill still decides whether the symptom is present, and this list decides what it costs. In a change review, a confirmed `Regression` against a trigger is `HIGH` even where the same symptom would be `MEDIUM` as pre-existing.
 
-### 6. Consolidate systemic findings
+### 7. Consolidate systemic findings
 
 One root cause is one finding. List every confirmed location in the same row rather than producing a row per occurrence. Do not pad the report to reach the finding cap; a short review or no findings is a valid result.
 
-### 7. Make restraint visible
+### 8. Make restraint visible
 
 Record candidates considered but deliberately rejected. Reject a candidate on any of four grounds:
 
@@ -105,11 +107,11 @@ Record candidates considered but deliberately rejected. Reject a candidate on an
 - The project's convention is a defensible choice, not merely an established one.
 - The change would add complexity with no user benefit.
 
-### 8. Verify what can be verified
+### 9. Verify what can be verified
 
 Run safe, relevant checks available in the project. Inspect the rendered interface when runtime behavior or visual judgment matters. Report the exact command or interaction and observed result. If a check cannot be run, label it **Not verified** and state what remains; never convert a verification gap into a finding.
 
-### 9. Review without mutating by default
+### 10. Review without mutating by default
 
 Treat a review request as read-only. Do not edit source code unless the user also asks to implement the findings. When implementation is requested, preserve the consolidated report as the change scope and re-run the relevant verification afterward.
 
