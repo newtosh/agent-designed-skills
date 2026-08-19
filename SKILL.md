@@ -23,16 +23,11 @@ So the bar for reporting is evidence, not taste. The bar for `Approve` is that y
 
 ## Core principles
 
-### 1. Resolve scope and mode first
-
-Parse the invocation as `[quick|full] [scope]`. The first token is a mode only when it is exactly `quick` or `full`; anything else is part of the scope. Mode defaults to `full`.
+### 1. Resolve the scope first
 
 Infer the screen, flow, feature, or repository scope from the request and current workspace. State the resolved scope in the output.
 
-| Mode | Coverage | Finding cap |
-| --- | --- | --- |
-| `quick` | The primary path through the scope and the states it actually reaches; report only `HIGH` and `MEDIUM` issues | 5 |
-| `full` | Entire requested scope across every domain skill listed under **Use domain skills as the sources of truth**, including empty, loading, error, and narrow-width states when present | 15 |
+Cover all of it across every domain skill listed under **Use domain skills as the sources of truth**, including the empty, loading, error, and narrow-width states where they exist. Report at most 15 findings.
 
 When the requested scope is too large to inspect credibly, narrow it to one complete flow. Take the flow the request centers on. Failing that, take the entry path every user of the scope must pass through. State the boundary and what it excluded. Never imply uninspected surfaces were reviewed.
 
@@ -42,7 +37,7 @@ When the request names a branch, pull request, commit range, or uncommitted chan
 
 Never resolve a change scope here. Reading a diff, classifying findings, and expanding changed files to affected surfaces all belong to `interface-review`. Guess at them and you produce a report whose scope nobody can check.
 
-When `interface-review` hands a review back, it supplies the change scope, the affected surfaces, and a status per finding. Everything from severity onward stays here, with the four additions in [review-format.md](review-format.md).
+When `interface-review` hands a review back, it supplies the change scope, a status per finding, and the change-scoped report format. Severity, ranking, the cap, and the verdict stay here, and all three cover `Introduced` and `Regression` only.
 
 ### 3. Recon before judgment
 
@@ -54,7 +49,7 @@ Read them to find where a finding belongs, not for permission to drop it. A docu
 
 ### 4. Use domain skills as the sources of truth
 
-Before reviewing, confirm that every owning skill below is available. Load and apply every available owner. In `quick` mode, inspect every domain but spend depth only where the primary flow has evidence. In `full` mode, complete each available domain review before consolidation.
+Before reviewing, confirm that every owning skill below is available. Load and apply every available owner, and complete each domain review before consolidation.
 
 Review in this order so foundational failures are not hidden by polish:
 
@@ -81,11 +76,11 @@ Use one shared severity scale:
 
 - `HIGH`: blocks a task, misleads the user, hides content or controls, causes data-loss risk, or creates a repeated systemic failure.
 - `MEDIUM`: meaningfully harms comprehension, efficiency, adaptability, or consistency.
-- `LOW`: isolated polish with limited task impact. Include only in `full` mode.
+- `LOW`: isolated polish with limited task impact.
 
 Within a severity, rank by how many places the finding reaches and how much one fix buys. A token or shared-component fix outranks the same symptom in one leaf component.
 
-**Escalation triggers.** Once the owning skill confirms one of these, it is `HIGH` on sight, not averaged down because the surface is minor and not withheld in `quick` mode:
+**Escalation triggers.** Once the owning skill confirms one of these, it is `HIGH` on sight, never averaged down because the surface is minor:
 
 - An interactive control with no accessible name.
 - A keyboard-reachable control with no visible focus indicator.
@@ -116,20 +111,11 @@ A fix written at step 5 where step 1 was available is its own finding. Report th
 
 One root cause is one finding. List every confirmed location in the same row rather than producing a row per occurrence. Do not pad the report to reach the finding cap; a short review or no findings is a valid result.
 
-### 9. Make restraint visible
-
-Record candidates considered but deliberately rejected. Reject a candidate on any of four grounds:
-
-- The owning skill permits the current implementation.
-- The evidence is insufficient.
-- The project's convention is a defensible choice, not merely an established one.
-- The change would add complexity with no user benefit.
-
-### 10. Verify what can be verified
+### 9. Verify what can be verified
 
 Run safe, relevant checks available in the project. Inspect the rendered interface when runtime behavior or visual judgment matters. Report the exact command or interaction and observed result. If a check cannot be run, label it **Not verified** and state what remains; never convert a verification gap into a finding.
 
-### 11. Review without mutating by default
+### 10. Review without mutating by default
 
 Treat a review request as read-only. Do not edit source code unless the user also asks to implement the findings. When implementation is requested, preserve the consolidated report as the change scope and re-run the relevant verification afterward.
 
@@ -147,4 +133,4 @@ Treat a review request as read-only. Do not edit source code unless the user als
 
 ## Review output format
 
-The format lives in [review-format.md](review-format.md): scope and coverage, the findings table, considered-but-rejected, verification, the verdict, and the change-scoped additions. A review is not finished until its findings are reported there.
+The format lives in [review-format.md](review-format.md): scope and coverage, the findings table, verification, and the verdict. A review is not finished until its findings are reported there.
