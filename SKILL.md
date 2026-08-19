@@ -55,7 +55,7 @@ Review in this order so foundational failures are not hidden by polish:
 5. `better-colors`
 6. `better-ui`
 
-This skill owns the final response. When a domain skill is loaded through `better-interface`, apply its principles and references but ignore its **Reporting** section and the `review-output.md` it points at. Use the consolidated format, shared severity, and finding cap in this file instead.
+This skill owns the final response. When a domain skill is loaded through `better-interface`, apply its principles and references but ignore its **Reporting** section. Use the consolidated format, shared severity, and finding cap in this file instead.
 
 If an owning skill is unavailable, mark that domain `Not reviewed`, name the missing skill, and continue with the remaining domains. Do not recreate its rules from memory, substitute a neighboring skill, or claim holistic coverage.
 
@@ -126,9 +126,11 @@ Treat a review request as read-only. Do not edit source code unless the user als
 
 ## Review output format
 
-Always use the following sections.
+This section is the only definition of the review format in this collection. An orchestrated review uses every section below. A domain skill reporting a standalone review uses the subset marked as such, and takes its severity ladder and verification checks from its own `## Reporting` section.
 
 ### Scope and coverage
+
+Orchestrated reviews only.
 
 State the mode, exact scope, stack and styling conventions, the project convention documents found in recon, and any review boundary. Then show coverage:
 
@@ -140,17 +142,25 @@ Include every domain listed in principle 3. `Clear` means inspected with no acti
 
 ### Findings
 
-Use one table ordered by severity, then reach and leverage:
+One table, ordered by severity, then reach and leverage:
 
 | # | Severity | Domain | Location | Before | After | Why |
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | HIGH | Accessibility | `src/Dialog.tsx:42` | `<button><XIcon /></button>` | Add `aria-label="Close"` and hide the icon from the accessibility tree | The icon-only control has no accessible name |
 
-Each row is one root cause. The **Domain** value is the owning skill without the `better-` prefix. Respect the mode's finding cap. If there are no findings, omit the table and state "No actionable interface findings."
+- **Severity** comes from principle 5 here, and from the domain skill's own ladder in a standalone review.
+- **Location** cites `path/to/file:line`. Cite the exact screen and component when the artifact has no source files.
+- **Before / After** show the current implementation and an actionable replacement. Never split them into separate "Before:" and "After:" lines.
+- **Why** names the violated principle and its user impact.
+- **Domain** is the owning skill without the `better-` prefix.
+
+Each row is one root cause. Consolidate a repeated systemic issue into one row and list every affected location. Respect the mode's finding cap. With no findings, omit the table and state "No actionable interface findings."
+
+A standalone domain review drops the `#` and `Domain` columns, groups its rows under the principle each one violates, and omits principles with no findings.
 
 ### Considered but rejected
 
-Include 1–3 candidates in `quick` mode and 2–5 in `full` mode:
+Orchestrated reviews only. Include 1–3 candidates in `quick` mode and 2–5 in `full` mode:
 
 | Location | Candidate | Rejected because |
 | --- | --- | --- |
@@ -160,7 +170,7 @@ These are real candidates inspected during the review, not invented filler. If t
 
 ### Verification
 
-List each check or interaction, the exact command or steps, and the observed result. Separate checks that passed from checks marked **Not verified**.
+List each check or interaction, the exact command or steps, and the observed result. Separate checks that passed from checks marked **Not verified**. A standalone review draws its list of checks from the domain skill's `## Reporting` section.
 
 ### Verdict
 
@@ -169,6 +179,8 @@ End with exactly one:
 - `Block`: one or more `HIGH` findings remain.
 - `Needs changes`: only `MEDIUM` or `LOW` findings remain.
 - `Approve`: no actionable findings remain and the claimed coverage was verified.
+
+A standalone review with nothing to report omits the table, states "No actionable <domain> findings", reports verification, and ends with `Approve`.
 
 ### Change-scoped reviews
 
