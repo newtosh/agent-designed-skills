@@ -30,17 +30,19 @@ Infer the screen, flow, feature, or repository scope from the request and curren
 
 If the requested scope is too large to inspect credibly, narrow it to one complete flow: the one the request itself centers on, or failing that the entry path every user of the scope must pass through. State the boundary and what it excluded. Never imply uninspected surfaces were reviewed.
 
-When the request names a branch, pull request, commit range, or uncommitted changes, that is a change review, not a screen review. Say so and ask the user to run `interface-review`; it is user-invoked, so this skill cannot start it. Never resolve a change scope here: reading a diff, classifying findings, and expanding changed files to affected surfaces are all `interface-review`'s, and guessing at them produces a report whose scope nobody can check.
+When the request names a branch, pull request, commit range, or uncommitted changes, that is a change review, not a screen review. Say so and ask the user to run `interface-review`. It is user-invoked, so this skill cannot start it.
 
-`interface-review` hands the review back the other way. When it does, it supplies the resolved change scope, the affected surfaces, and a status for each finding; severity, consolidation, the cap, the output format, and the verdict stay here, under **Change-Scoped Reviews** below.
+Never resolve a change scope here. Reading a diff, classifying findings, and expanding changed files to affected surfaces all belong to `interface-review`. Guess at them and you produce a report whose scope nobody can check.
+
+When `interface-review` hands a review back, it supplies the change scope, the affected surfaces, and a status per finding. Everything from severity onward stays here, with the additions in **Change-scoped reviews** below.
 
 ### 2. Recon before judgment
 
-Identify the framework, styling system, component library, design tokens, supported viewports, and available preview or test commands. Write every fix in the project's own idiom so no finding arrives as a request to adopt a different stack. That governs the form of the fix, not whether the current code is good enough.
+Identify the framework, styling system, component library, design tokens, supported viewports, and any preview or test command. Write every fix in the project's own idiom, so no finding arrives as a request to adopt a different stack. That governs the form of the fix, not whether the current code is good enough.
 
 Then read what the project has written about its own interface: `CONTRIBUTING.md`, `CODING_STANDARDS.md`, `AGENTS.md`, `CLAUDE.md`, a design-system doc, Storybook docs, interface ADRs. Name in the output which you found, or that there are none.
 
-Read them for leverage, not permission. A documented convention is not evidence the convention is good, and "it's in the style guide" does not retire a finding. What they change is **where** you report: when a guideline or shared token is the cause, report it once against that source with the components as its locations.
+Read them for leverage, not permission. A documented convention is no evidence the convention is good, and "it's in the style guide" does not retire a finding. What they change is **where** you report. When a guideline or a shared token is the cause, report it once against that source, with the components as its locations.
 
 ### 3. Use domain skills as the sources of truth
 
@@ -119,7 +121,7 @@ Treat a review request as read-only. Do not edit source code unless the user als
 | Missing owning skill silently treated as covered | Mark the domain `Not reviewed` and name the unavailable skill |
 | No rejected candidates | Include the required considered-but-rejected table |
 | Review silently edits code | Stay read-only unless implementation was requested |
-| “Approve” with pending actionable findings | Use `Needs changes` or `Block` |
+| "Approve" with pending actionable findings | Use `Needs changes` or `Block` |
 | Every legacy issue in a touched file reported | Cap pre-existing findings at three in their own section |
 | A pre-existing issue blocking a change review | Keep pre-existing findings out of the cap and out of the verdict |
 | Domain marked `Clear` when the change never touched it | Mark it `Not reviewed: no evidence in the change scope` |
@@ -184,7 +186,7 @@ A standalone review with nothing to report omits the table, states "No actionabl
 
 ### Change-scoped reviews
 
-When `interface-review` resolved the scope from version control, the format above applies with these four additions. They live here because this file owns the format, the cap, and the verdict; `interface-review` supplies the scope and the statuses.
+When `interface-review` resolved the scope from version control, the format above applies with these four additions.
 
 1. **Scope block.** Open **Scope and Coverage** with the change scope table `interface-review` produced, then the coverage table above unchanged. A domain with no evidence in the change scope is `Not reviewed: no evidence in the change scope`, which is a coverage statement, not a gap.
 2. **Status column.** The findings table gains a `Status` column after `Domain`, carrying `Introduced` or `Regression`:
