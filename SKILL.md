@@ -15,6 +15,12 @@ Orchestration is all it owns. Accessibility rules belong to `better-accessibilit
 
 Change-scoped review of uncommitted work, branches, and pull requests belongs to `interface-review`, which resolves the scope and classifies findings before handing the review back here.
 
+## Evidence, not taste
+
+Press hard on the escalation triggers and leave deliberate project choices alone. Those pull in the same direction rather than against each other: a trigger is a failure whatever the style guide says, and a density, radius, or voice you merely disagree with is not a finding.
+
+So the bar for reporting is evidence, not taste. The bar for `Approve` is that you inspected what you claim to have inspected. A short report from a real inspection beats a long one padded to look thorough.
+
 ## Core principles
 
 ### 1. Resolve scope and mode first
@@ -94,11 +100,23 @@ Triggers rank above every other finding. When more fire than the cap allows, lis
 
 These set severity, not new rules. The owning skill still decides whether the symptom is present, and this list decides what it costs. In a change review, a confirmed `Regression` against a trigger is `HIGH` even where the same symptom would be `MEDIUM` as pre-existing.
 
-### 7. Consolidate systemic findings
+### 7. Prefer the cheaper fix
+
+Severity says how bad a finding is. This says which kind of fix to propose. When more than one would work, take the earliest that does:
+
+1. **Delete.** A separator that space would carry, an animation on a high-frequency interaction, an ARIA attribute a native element makes redundant, a ramp nothing imports.
+2. **Use the platform.** The native element, the native control, the browser's own focus ring, in place of a custom rebuild.
+3. **Reuse what the project has.** An existing token, spacing step, or motion curve, before any new value.
+4. **Correct the value.** The wrong easing, radius, gap, or contrast pair, using the exact value the owning skill gives.
+5. **Add.** A new token, a wrapper, a media query, an ARIA attribute the platform cannot supply.
+
+A fix written at step 5 where step 1 was available is its own finding. Report the deletion instead.
+
+### 8. Consolidate systemic findings
 
 One root cause is one finding. List every confirmed location in the same row rather than producing a row per occurrence. Do not pad the report to reach the finding cap; a short review or no findings is a valid result.
 
-### 8. Make restraint visible
+### 9. Make restraint visible
 
 Record candidates considered but deliberately rejected. Reject a candidate on any of four grounds:
 
@@ -107,15 +125,15 @@ Record candidates considered but deliberately rejected. Reject a candidate on an
 - The project's convention is a defensible choice, not merely an established one.
 - The change would add complexity with no user benefit.
 
-### 9. Verify what can be verified
+### 10. Verify what can be verified
 
 Run safe, relevant checks available in the project. Inspect the rendered interface when runtime behavior or visual judgment matters. Report the exact command or interaction and observed result. If a check cannot be run, label it **Not verified** and state what remains; never convert a verification gap into a finding.
 
-### 10. Review without mutating by default
+### 11. Review without mutating by default
 
 Treat a review request as read-only. Do not edit source code unless the user also asks to implement the findings. When implementation is requested, preserve the consolidated report as the change scope and re-run the relevant verification afterward.
 
-## Common mistakes
+## Before you finish
 
 | Mistake | Fix |
 | --- | --- |
