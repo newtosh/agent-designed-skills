@@ -75,4 +75,4 @@ When `interface-review` resolved the scope from version control, the format abov
    | --- | --- | --- | --- |
    | MEDIUM | Typography | `src/Toolbar.tsx:7` | Numeric badges use proportional figures; predates this change |
 
-4. **Cap and verdict.** Both cover `Introduced` and `Regression` only. `Pre-existing` findings sit outside the cap, so touching a legacy file cannot turn into a full-file audit, and outside the verdict, so a change whose only findings are pre-existing is an `Approve`.
+4. **Cap and verdict.** Both cover `Introduced` and `Regression` only. `Pre-existing` findings sit outside the cap, so touching a legacy file cannot turn into a full-file audit. They sit outside the verdict too, so a change whose only findings are pre-existing is an `Approve`.

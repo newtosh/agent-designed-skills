@@ -28,7 +28,7 @@ Infer the screen, flow, feature, or repository scope from the request and curren
 | `quick` | The primary path through the scope and the states it actually reaches; report only `HIGH` and `MEDIUM` issues | 5 |
 | `full` | Entire requested scope across every domain skill listed in principle 3, including empty, loading, error, and narrow-width states when present | 15 |
 
-If the requested scope is too large to inspect credibly, narrow it to one complete flow: the one the request itself centers on, or failing that the entry path every user of the scope must pass through. State the boundary and what it excluded. Never imply uninspected surfaces were reviewed.
+When the requested scope is too large to inspect credibly, narrow it to one complete flow. Take the flow the request centers on. Failing that, take the entry path every user of the scope must pass through. State the boundary and what it excluded. Never imply uninspected surfaces were reviewed.
 
 When the request names a branch, pull request, commit range, or uncommitted changes, that is a change review, not a screen review. Say so and ask the user to run `interface-review`. It is user-invoked, so this skill cannot start it.
 
@@ -88,7 +88,7 @@ Within a severity, rank by reach and leverage. A token or shared-component fix o
 - State or meaning carried by color alone.
 - A destructive action with no confirmation, undo, or distinct treatment.
 
-Triggers rank above every other finding. When more fire than the cap allows, list them first and state how many findings the cap excluded; a cap may shorten a report but may never be why a blocker went unreported.
+Triggers rank above every other finding. When more fire than the cap allows, list them first and state how many the cap excluded. A cap may shorten a report. It may never be why a blocker went unreported.
 
 These set severity, not new rules. The owning skill still decides whether the symptom is present, and this list decides what it costs. In a change review, a confirmed `Regression` against a trigger is `HIGH` even where the same symptom would be `MEDIUM` as pre-existing.
 
@@ -98,7 +98,12 @@ One root cause is one finding. List every confirmed location in the same row rat
 
 ### 7. Make restraint visible
 
-Record candidates considered but deliberately rejected. A candidate is rejected when the owning skill permits the current implementation, evidence is insufficient, the project's convention is a defensible choice and not merely an established one, or the proposed change would add complexity without user benefit.
+Record candidates considered but deliberately rejected. Reject a candidate on any of four grounds:
+
+- The owning skill permits the current implementation.
+- The evidence is insufficient.
+- The project's convention is a defensible choice, not merely an established one.
+- The change would add complexity with no user benefit.
 
 ### 8. Verify what can be verified
 
