@@ -4,15 +4,17 @@ description: >-
   Cross-discipline interface review: routes a screen, flow, feature, or product interface to every `better-*` domain skill and consolidates one ranked verdict. Use when asked for a holistic review rather than a single domain, and when `interface-review` hands up a change to route. Triggers on better-interface, holistic interface review, review the whole screen.
 ---
 
-# Review the interface as one system
+# Interface review
 
-A strong interface is not a stack of independent audits stapled together. Review the whole experience, let each `better-*` skill own its domain rules, then consolidate the evidence into one prioritized verdict.
+This skill runs a cross-discipline review. It routes the interface to each `better-*` skill, collects their evidence, and consolidates one ranked verdict.
 
-This skill owns orchestration only. Accessibility rules belong to `better-accessibility`; structure to `better-layout`; copy to `better-writing`; type to `better-typography`; color to `better-colors`; visual polish and motion to `better-ui`. Never duplicate or override their rules here. Change-scoped review of uncommitted work, branches, and pull requests belongs to `interface-review`, which resolves the scope and classifies findings before handing the review back here.
+Orchestration is all it owns. Accessibility rules belong to `better-accessibility`, structure to `better-layout`, copy to `better-writing`, type to `better-typography`, color to `better-colors`, visual polish and motion to `better-ui`. Never duplicate or override their rules here.
 
-## Core Principles
+Change-scoped review of uncommitted work, branches, and pull requests belongs to `interface-review`, which resolves the scope and classifies findings before handing the review back here.
 
-### 1. Resolve Scope and Mode First
+## Core principles
+
+### 1. Resolve scope and mode first
 
 Parse the invocation as `[quick|full] [scope]`. The first token is a mode only when it is exactly `quick` or `full`; anything else is part of the scope. Mode defaults to `full`.
 
@@ -29,7 +31,7 @@ When the request names a branch, pull request, commit range, or uncommitted chan
 
 `interface-review` hands the review back the other way. When it does, it supplies the resolved change scope, the affected surfaces, and a status for each finding; severity, consolidation, the cap, the output format, and the verdict stay here, under **Change-Scoped Reviews** below.
 
-### 2. Recon Before Judgment
+### 2. Recon before judgment
 
 Identify the framework, styling system, component library, design tokens, supported viewports, and available preview or test commands. Write every fix in the project's own idiom so no finding arrives as a request to adopt a different stack. That governs the form of the fix, not whether the current code is good enough.
 
@@ -37,7 +39,7 @@ Then read what the project has written about its own interface: `CONTRIBUTING.md
 
 Read them for leverage, not permission. A documented convention is not evidence the convention is good, and "it's in the style guide" does not retire a finding. What they change is **where** you report: when a guideline or shared token is the cause, report it once against that source with the components as its locations.
 
-### 3. Use Domain Skills as the Sources of Truth
+### 3. Use domain skills as the sources of truth
 
 Before reviewing, confirm that every owning skill below is available. Load and apply every available owner. In `quick` mode, inspect every domain but spend depth only where the primary flow has evidence. In `full` mode, complete each available domain review before consolidation.
 
@@ -56,11 +58,11 @@ If an owning skill is unavailable, mark that domain `Not reviewed`, name the mis
 
 When two skills appear to cover the same issue, assign it to the skill that owns the underlying rule and mention secondary effects in the **Why** cell. Report it once.
 
-### 4. Require Evidence
+### 4. Require evidence
 
 Every finding cites `path/to/file:line` and shows the current implementation. If the review artifact has no source files, cite the exact screen and component. Do not report a code-level finding from visual appearance alone or a visual finding from source code alone when runtime behavior determines the result.
 
-### 5. Rank by User Impact
+### 5. Rank by user impact
 
 Use one shared severity scale:
 
@@ -85,23 +87,23 @@ Triggers rank above every other finding. When more fire than the cap allows, lis
 
 These set severity, not new rules. The owning skill still decides whether the symptom is present, and this list decides what it costs. In a change review, a confirmed `Regression` against a trigger is `HIGH` even where the same symptom would be `MEDIUM` as pre-existing.
 
-### 6. Consolidate Systemic Findings
+### 6. Consolidate systemic findings
 
 One root cause is one finding. List every confirmed location in the same row rather than producing a row per occurrence. Do not pad the report to reach the finding cap; a short review or no findings is a valid result.
 
-### 7. Make Restraint Visible
+### 7. Make restraint visible
 
 Record candidates considered but deliberately rejected. A candidate is rejected when the owning skill permits the current implementation, evidence is insufficient, the project's convention is a defensible choice and not merely an established one, or the proposed change would add complexity without user benefit.
 
-### 8. Verify What Can Be Verified
+### 8. Verify what can be verified
 
 Run safe, relevant checks available in the project. Inspect the rendered interface when runtime behavior or visual judgment matters. Report the exact command or interaction and observed result. If a check cannot be run, label it **Not verified** and state what remains; never convert a verification gap into a finding.
 
-### 9. Review Without Mutating by Default
+### 9. Review without mutating by default
 
 Treat a review request as read-only. Do not edit source code unless the user also asks to implement the findings. When implementation is requested, preserve the consolidated report as the change scope and re-run the relevant verification afterward.
 
-## Common Mistakes
+## Common mistakes
 
 | Mistake | Fix |
 | --- | --- |
@@ -119,11 +121,11 @@ Treat a review request as read-only. Do not edit source code unless the user als
 | A pre-existing issue blocking a change review | Keep pre-existing findings out of the cap and out of the verdict |
 | Domain marked `Clear` when the change never touched it | Mark it `Not reviewed: no evidence in the change scope` |
 
-## Review Output Format
+## Review output format
 
 Always use the following sections.
 
-### Scope and Coverage
+### Scope and coverage
 
 State the mode, exact scope, stack and styling conventions, the project convention documents found in recon, and any review boundary. Then show coverage:
 
@@ -143,7 +145,7 @@ Use one table ordered by severity, then reach and leverage:
 
 Each row is one root cause. The **Domain** value is the owning skill without the `better-` prefix. Respect the mode's finding cap. If there are no findings, omit the table and state "No actionable interface findings."
 
-### Considered but Rejected
+### Considered but rejected
 
 Include 1–3 candidates in `quick` mode and 2–5 in `full` mode:
 
@@ -165,7 +167,7 @@ End with exactly one:
 - `Needs changes`: only `MEDIUM` or `LOW` findings remain.
 - `Approve`: no actionable findings remain and the claimed coverage was verified.
 
-### Change-Scoped Reviews
+### Change-scoped reviews
 
 When `interface-review` resolved the scope from version control, the format above applies with these four additions. They live here because this file owns the format, the cap, and the verdict; `interface-review` supplies the scope and the statuses.
 
