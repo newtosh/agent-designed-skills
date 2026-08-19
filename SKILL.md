@@ -90,6 +90,11 @@ Within a severity, rank by how many places the finding reaches and how much one 
 - Body or control text whose rendered contrast pair fails its required ratio.
 - State or meaning carried by color alone.
 - A destructive action with no confirmation, undo, or distinct treatment.
+- Truncated content with no way to reach the full value.
+- Content or a control reachable only past a scroll edge or behind a disclosure that has no visible cue.
+- An error that names no way to recover from it.
+- A semantic color used against its meaning, such as the danger hue on a non-destructive action.
+- A state change carried by motion alone, with no color, icon, or label left behind when the animation does not run.
 
 Triggers rank above every other finding. When more fire than the cap allows, list them first and state how many the cap excluded. A cap may shorten a report. It may never be why a blocker went unreported.
 
