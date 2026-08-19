@@ -65,7 +65,7 @@ Review in this order so foundational failures are not hidden by polish:
 5. `better-colors`
 6. `better-ui`
 
-This skill owns the final response. When a domain skill is loaded through `better-interface`, apply its principles and references but ignore its **Reporting** section. Use the consolidated format, shared severity, and finding cap in this file instead.
+From a domain skill loaded here, take its principles, its references, and its verification checks. Its severity ladder and its format are for standalone use; the consolidated format, shared severity, and finding cap in this file replace them.
 
 If an owning skill is unavailable, mark that domain `Not reviewed`, name the missing skill, and continue with the remaining domains. Do not recreate its rules from memory, substitute a neighboring skill, or claim holistic coverage.
 
@@ -138,7 +138,6 @@ Treat a review request as read-only. Do not edit source code unless the user als
 | Mistake | Fix |
 | --- | --- |
 | Six disconnected domain reports | Consolidate into one ranked findings table |
-| Same issue reported by multiple skills | Assign it to the skill that owns the underlying rule |
 | Visual claim inferred only from source | Inspect the rendered state or mark it not verified |
 | Silent gaps in coverage | Show which domains and states were actually inspected |
 | Missing owning skill silently treated as covered | Mark the domain `Not reviewed` and name the unavailable skill |
@@ -148,6 +147,4 @@ Treat a review request as read-only. Do not edit source code unless the user als
 
 ## Review output format
 
-The format lives in [review-format.md](review-format.md): the findings table and its columns, scope and coverage, considered-but-rejected, verification, the verdict ladder, and the four change-scoped additions. It is the only definition of the format in this collection, which is why it sits in its own file. A domain skill reporting a standalone review reads it too, and reaches only the subset marked for standalone use.
-
-A review is not finished until its findings are reported in that format.
+The format lives in [review-format.md](review-format.md): scope and coverage, the findings table, considered-but-rejected, verification, the verdict, and the change-scoped additions. A review is not finished until its findings are reported there.

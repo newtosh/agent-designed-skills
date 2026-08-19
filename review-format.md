@@ -1,10 +1,8 @@
 # Review output format
 
-This section is the only definition of the review format in this collection. An orchestrated review uses every section below. A domain skill reporting a standalone review uses the subset marked as such, and takes its severity ladder and verification checks from its own `## Reporting` section.
+This is the format for a review `better-interface` orchestrates. A domain skill reporting on its own carries its own smaller format, in its `## Reporting` section.
 
 ## Scope and coverage
-
-Orchestrated reviews only.
 
 State the mode, exact scope, stack and styling conventions, the project convention documents found in recon, and any review boundary. Then show coverage:
 
@@ -22,7 +20,7 @@ One table, ordered by severity, then reach and leverage:
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | HIGH | Accessibility | `src/Dialog.tsx:42` | `<button><XIcon /></button>` | Add `aria-label="Close"` and hide the icon from the accessibility tree | The icon-only control has no accessible name |
 
-- **Severity** comes from `better-interface`'s **Rank by user impact** in an orchestrated review, and from the domain skill's own ladder in a standalone one.
+- **Severity** comes from `better-interface`'s **Rank by user impact**.
 - **Location** cites `path/to/file:line`. Cite the exact screen and component when the artifact has no source files.
 - **Before / After** show the current implementation and an actionable replacement. Never split them into separate "Before:" and "After:" lines.
 - **Why** names the violated principle and its user impact.
@@ -30,11 +28,9 @@ One table, ordered by severity, then reach and leverage:
 
 Each row is one root cause. Consolidate a repeated systemic issue into one row and list every affected location. Respect the mode's finding cap. With no findings, omit the table and state "No actionable interface findings."
 
-A standalone domain review drops the `#` and `Domain` columns, groups its rows under the principle each one violates, and omits principles with no findings.
-
 ## Considered but rejected
 
-Orchestrated reviews only. Include 1–3 candidates in `quick` mode and 2–5 in `full` mode:
+Include 1–3 candidates in `quick` mode and 2–5 in `full` mode:
 
 | Location | Candidate | Rejected because |
 | --- | --- | --- |
@@ -44,7 +40,7 @@ These are real candidates inspected during the review, not invented filler. If t
 
 ## Verification
 
-List each check or interaction, the exact command or steps, and the observed result. Separate checks that passed from checks marked **Not verified**. A standalone review draws its list of checks from the domain skill's `## Reporting` section.
+List each check or interaction, the exact command or steps, and the observed result. Separate checks that passed from checks marked **Not verified**.
 
 ## Verdict
 
@@ -53,8 +49,6 @@ End with exactly one:
 - `Block`: one or more `HIGH` findings remain.
 - `Needs changes`: only `MEDIUM` or `LOW` findings remain.
 - `Approve`: no actionable findings remain and the claimed coverage was verified.
-
-A standalone review with nothing to report omits the table, states "No actionable <domain> findings", reports verification, and ends with `Approve`.
 
 ## Change-scoped reviews
 
