@@ -17,7 +17,7 @@ Change-scoped review of uncommitted work, branches, and pull requests belongs to
 
 ## Evidence, not taste
 
-Press hard on the escalation triggers and leave deliberate project choices alone. Those pull in the same direction rather than against each other: a trigger is a failure whatever the style guide says, and a density, radius, or voice you merely disagree with is not a finding.
+Press hard on the escalation triggers and leave deliberate project choices alone. Those pull in the same direction rather than against each other. A trigger is a failure whatever the style guide says. A density, radius, or voice you merely disagree with is not a finding.
 
 So the bar for reporting is evidence, not taste. The bar for `Approve` is that you inspected what you claim to have inspected. A short report from a real inspection beats a long one padded to look thorough.
 
