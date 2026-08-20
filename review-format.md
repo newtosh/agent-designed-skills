@@ -4,7 +4,7 @@ This is the format for a review `better-interface` orchestrates. A domain skill 
 
 ## Scope and coverage
 
-State the exact scope, stack and styling conventions, the project convention documents found in recon, and any review boundary. Then show coverage:
+State the exact scope, stack and styling conventions, the project convention documents found in recon and any review boundary. Then show coverage:
 
 | Domain | Evidence inspected | Result |
 | --- | --- | --- |
@@ -30,7 +30,7 @@ Each row is one root cause. Consolidate a repeated systemic issue into one row a
 
 ## Verification
 
-List each check or interaction, the exact command or steps, and the observed result. Separate checks that passed from checks marked **Not verified**.
+List each check or interaction, the exact command or steps and the observed result. Separate checks that passed from checks marked **Not verified**.
 
 ## Verdict
 
@@ -43,4 +43,4 @@ End with one of two:
 
 ## Change-scoped reviews
 
-When `interface-review` resolved the scope from version control, it supplies the scope block, a status on every finding, and the change-scoped format, which its `## Review output format` holds. Severity, ranking, the cap, and the verdict are the ones above, and all four cover `Introduced` and `Regression` only.
+When `interface-review` resolved the scope from version control, it supplies the scope block, a status on every finding and the change-scoped format, which its `## Review output format` holds. Severity, ranking, the cap and the verdict are the ones above, and all four cover `Introduced` and `Regression` only.
