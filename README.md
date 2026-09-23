@@ -144,8 +144,8 @@ specific, may already have other hooks). Add the matcher yourself:
 ```
 
 Adjust the matcher to whatever publish or file-write tools exist in that
-env. The hook scans string fields in `tool_input` that look like markup.
-It fails open on errors.
+env. The hook scans each string field in `tool_input` on its own when the
+field contains markup or an outline removal. It fails open on errors.
 
 Check the homegrown Python from a checkout:
 

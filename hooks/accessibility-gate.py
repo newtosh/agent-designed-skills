@@ -3,42 +3,45 @@
 
 Reads the Claude Code hook JSON on stdin, pulls string values out of
 tool_input, and blocks (exit 2) when accessibility-gate finds a blocking
-pattern. Fails open on any error so this hook is never the reason a real
-send or publish breaks.
+pattern. Each string is its own document. Fails open on any error so this
+hook is never the reason a real send or publish breaks.
 """
 
 from __future__ import annotations
 
 import json
 import sys
+from collections.abc import Callable
 from pathlib import Path
 
 _repo_root = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_repo_root / "skills" / "accessibility-gate"))
 
-MIN_LEN = 20
 
-
-def collect_strings(obj: object, out: list[str]) -> None:
+def collect_strings(
+    obj: object, out: list[str], should_scan: Callable[[str], bool]
+) -> None:
     if isinstance(obj, str):
-        if len(obj) >= MIN_LEN and "<" in obj:
+        if should_scan(obj):
             out.append(obj)
     elif isinstance(obj, dict):
         for value in obj.values():
-            collect_strings(value, out)
+            collect_strings(value, out, should_scan)
     elif isinstance(obj, list):
         for value in obj:
-            collect_strings(value, out)
+            collect_strings(value, out, should_scan)
 
 
 def main() -> int:
     try:
         payload = json.load(sys.stdin)
-        from accessibility_lib import analyze  # noqa: E402
+        from accessibility_lib import analyze, looks_like_markup  # noqa: E402
 
         strings: list[str] = []
-        collect_strings(payload.get("tool_input", {}), strings)
-        findings = analyze("\n".join(strings))
+        collect_strings(payload.get("tool_input", {}), strings, looks_like_markup)
+        findings = []
+        for chunk in strings:
+            findings.extend(analyze(chunk))
         if findings:
             lines = [
                 "accessibility-gate: blocking pattern in outgoing markup. Fix it first."

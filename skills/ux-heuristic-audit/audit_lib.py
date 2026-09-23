@@ -70,7 +70,12 @@ def analyze(text: str) -> list[Finding]:
         findings.append(Finding("Coverage", "missing or empty"))
         covered: dict[str, str] = {}
     else:
-        covered = {hid: status for hid, status in _COVERAGE.findall(coverage_body)}
+        covered: dict[str, str] = {}
+        for hid, status in _COVERAGE.findall(coverage_body):
+            if hid in covered:
+                findings.append(Finding("Coverage", f"duplicate coverage {hid}"))
+                continue
+            covered[hid] = status
         for hid in HEURISTIC_IDS:
             if hid not in covered:
                 findings.append(Finding("Coverage", f"{hid} missing"))

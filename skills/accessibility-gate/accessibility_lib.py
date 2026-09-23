@@ -13,8 +13,14 @@ from dataclasses import dataclass
 from html.parser import HTMLParser
 
 _SKIP_INPUT_TYPES = {"hidden", "submit", "button", "reset", "image"}
-_OUTLINE_REMOVED = re.compile(r"outline\s*:\s*(?:none|0)\b", re.IGNORECASE)
+_OUTLINE_REMOVED = re.compile(
+    r"outline\s*:\s*(?:none|0+(?:\.0+)?"
+    r"(?:px|pt|pc|in|cm|mm|em|rem|ex|ch|vw|vh|vmin|vmax|%)?)"
+    r"(?![\w.])",
+    re.IGNORECASE,
+)
 _FOCUS_VISIBLE = re.compile(r":focus-visible", re.IGNORECASE)
+_LOCATOR_LIMIT = 80
 
 
 @dataclass(frozen=True)
@@ -31,6 +37,13 @@ class _Control:
     in_label: bool
 
 
+@dataclass
+class _ButtonFrame:
+    attrs: dict[str, str]
+    text: list[str]
+    depth: int
+
+
 class _Scanner(HTMLParser):
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
@@ -41,9 +54,8 @@ class _Scanner(HTMLParser):
         self.html_attrs: dict[str, str] | None = None
         self.style_chunks: list[str] = []
         self._label_depth = 0
-        self._button_tags: list[str] = []
-        self._button_attrs: dict[str, str] | None = None
-        self._button_text: list[str] = []
+        self._stack: list[str] = []
+        self._open_buttons: list[_ButtonFrame] = []
         self._in_style = False
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
@@ -67,13 +79,15 @@ class _Scanner(HTMLParser):
             self._in_style = True
         if name == "img":
             self.images.append(attr)
+            alt = attr.get("alt", "").strip()
+            if alt:
+                for frame in self._open_buttons:
+                    frame.text.append(alt)
         if name in {"input", "select", "textarea"}:
             self.controls.append(_Control(name, attr, self._label_depth > 0))
         if name == "button" or attr.get("role", "").lower() == "button":
-            if not self._button_tags:
-                self._button_attrs = attr
-                self._button_text = []
-            self._button_tags.append(name)
+            self._open_buttons.append(_ButtonFrame(attr, [], len(self._stack)))
+        self._stack.append(name)
         style = attr.get("style", "")
         if style:
             self.style_chunks.append(style)
@@ -84,18 +98,23 @@ class _Scanner(HTMLParser):
             self._label_depth -= 1
         if name == "style":
             self._in_style = False
-        if self._button_tags and self._button_tags[-1] == name:
-            self._button_tags.pop()
-            if not self._button_tags and self._button_attrs is not None:
-                self.buttons.append((self._button_attrs, "".join(self._button_text)))
-                self._button_attrs = None
-                self._button_text = []
+        if self._stack and self._stack[-1] == name:
+            self._stack.pop()
+            while self._open_buttons and self._open_buttons[-1].depth == len(
+                self._stack
+            ):
+                frame = self._open_buttons.pop()
+                self.buttons.append((frame.attrs, "".join(frame.text)))
 
     def handle_data(self, data: str) -> None:
         if self._in_style:
             self.style_chunks.append(data)
-        if self._button_tags:
-            self._button_text.append(data)
+        for frame in self._open_buttons:
+            frame.text.append(data)
+
+
+def looks_like_markup(text: str) -> bool:
+    return "<" in text or _OUTLINE_REMOVED.search(text) is not None
 
 
 def _has_accessible_name(attrs: dict[str, str]) -> bool:
@@ -117,6 +136,26 @@ def _control_named(control: _Control, label_fors: set[str]) -> bool:
     return bool(control_id and control_id in label_fors)
 
 
+def _locator(src: str) -> str:
+    path = src.split("#", 1)[0].split("?", 1)[0]
+    cleaned = "".join(
+        char if char.isprintable() and char not in "\n\r\t" else " " for char in path
+    )
+    collapsed = " ".join(cleaned.split())
+    if not collapsed:
+        return "no src"
+    return collapsed[:_LOCATOR_LIMIT]
+
+
+def _outline_css(text: str, style_chunks: list[str]) -> str:
+    css = "\n".join(style_chunks)
+    if css:
+        return css
+    if _OUTLINE_REMOVED.search(text):
+        return text
+    return ""
+
+
 def analyze(text: str) -> list[Finding]:
     scanner = _Scanner()
     scanner.feed(text)
@@ -131,9 +170,12 @@ def analyze(text: str) -> list[Finding]:
 
     for attrs in scanner.images:
         if "alt" not in attrs:
-            src = attrs.get("src", "")
             findings.append(
-                Finding("blocking", "img-alt", f"<img> missing alt ({src or 'no src'})")
+                Finding(
+                    "blocking",
+                    "img-alt",
+                    f"<img> missing alt ({_locator(attrs.get('src', ''))})",
+                )
             )
 
     for control in scanner.controls:
@@ -162,8 +204,8 @@ def analyze(text: str) -> list[Finding]:
             )
         )
 
-    css = "\n".join(scanner.style_chunks)
-    if _OUTLINE_REMOVED.search(css) and not _FOCUS_VISIBLE.search(text):
+    css = _outline_css(text, scanner.style_chunks)
+    if _OUTLINE_REMOVED.search(css) and not _FOCUS_VISIBLE.search(css):
         findings.append(
             Finding(
                 "blocking",

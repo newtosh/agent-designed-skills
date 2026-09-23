@@ -50,6 +50,14 @@ class AuditTests(unittest.TestCase):
         details = [finding.detail for finding in analyze(text)]
         self.assertTrue(any("not observed" in detail for detail in details))
 
+    def test_duplicate_coverage_keeps_the_first_status(self) -> None:
+        text = coverage() + "\n- H4: not observed\n" + FINDING
+        details = [finding.detail for finding in analyze(text)]
+        self.assertIn("duplicate coverage H4", details)
+        self.assertFalse(
+            any("not observed, but a finding" in detail for detail in details)
+        )
+
     def test_bad_severity(self) -> None:
         text = coverage() + "\n" + FINDING.replace("severity: 3", "severity: 9")
         details = [finding.detail for finding in analyze(text)]

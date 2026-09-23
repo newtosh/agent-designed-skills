@@ -21,6 +21,8 @@ REQUIRED_SECTIONS: tuple[str, ...] = (
 
 _HEADING = re.compile(r"^##\s+(.+?)\s*$", re.MULTILINE)
 _OPTION = re.compile(r"(?m)^-\s+\S")
+_FENCE = re.compile(r"```.*?```", re.DOTALL)
+_COMMENT = re.compile(r"<!--.*?-->", re.DOTALL)
 
 
 @dataclass(frozen=True)
@@ -29,20 +31,33 @@ class Finding:
     detail: str
 
 
-def _sections(text: str) -> dict[str, str]:
+def _visible(text: str) -> str:
+    text = _FENCE.sub("", text)
+    return _COMMENT.sub("", text)
+
+
+def _sections(text: str) -> tuple[dict[str, str], list[str]]:
     matches = list(_HEADING.finditer(text))
     found: dict[str, str] = {}
+    duplicates: list[str] = []
     for index, match in enumerate(matches):
         title = match.group(1).strip()
         start = match.end()
         end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
-        found[title] = text[start:end].strip()
-    return found
+        body = text[start:end].strip()
+        if title in found:
+            duplicates.append(title)
+            continue
+        found[title] = body
+    return found, duplicates
 
 
 def analyze(text: str) -> list[Finding]:
-    sections = _sections(text)
+    sections, duplicates = _sections(_visible(text))
     findings: list[Finding] = []
+    for title in duplicates:
+        if title in REQUIRED_SECTIONS:
+            findings.append(Finding(title, "duplicate heading"))
     for title in REQUIRED_SECTIONS:
         body = sections.get(title, "")
         if not body:

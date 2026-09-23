@@ -69,6 +69,41 @@ class GateTests(unittest.TestCase):
     def test_hidden_input_is_ignored(self) -> None:
         self.assertEqual(codes('<input type="hidden" name="csrf">'), [])
 
+    def test_descendant_img_alt_names_button(self) -> None:
+        html = '<button type="button"><img src="x" alt="Close"></button>'
+        self.assertEqual(codes(html), [])
+
+    def test_nested_role_button_keeps_label(self) -> None:
+        html = '<div role="button"><div class="icon"></div>Save</div>'
+        self.assertEqual(codes(html), [])
+
+    def test_nameless_inner_role_button(self) -> None:
+        html = '<div role="button"><div role="button"></div>Save</div>'
+        self.assertEqual(codes(html), ["button-name"])
+
+    def test_focus_visible_comment_does_not_clear_outline(self) -> None:
+        html = (
+            "<style>button:focus { outline: none; }</style>"
+            "<!-- :focus-visible -->"
+            "<button>Go</button>"
+        )
+        self.assertIn("focus-outline", codes(html))
+
+    def test_bare_stylesheet_outline(self) -> None:
+        self.assertIn("focus-outline", codes("button:focus { outline: none; }"))
+        self.assertIn("focus-outline", codes("button:focus { outline: 0px; }"))
+        self.assertNotIn(
+            "focus-outline", codes("button:focus { outline: 0.5px solid; }")
+        )
+
+    def test_img_src_locator_drops_query_and_newlines(self) -> None:
+        html = '<img src="https://cdn.example/a.png?token=secret\nforged">'
+        details = [finding.detail for finding in analyze(html)]
+        self.assertEqual(len(details), 1)
+        self.assertNotIn("\n", details[0])
+        self.assertNotIn("token", details[0])
+        self.assertNotIn("forged", details[0])
+
     def test_hook_blocks_and_fails_open(self) -> None:
         hook = ROOT / "hooks" / "accessibility-gate.py"
         blocked = subprocess.run(
@@ -98,6 +133,62 @@ class GateTests(unittest.TestCase):
             check=False,
         )
         self.assertEqual(clean.returncode, 0)
+
+        short = subprocess.run(
+            [sys.executable, str(hook)],
+            input=json.dumps({"tool_input": {"body": "<button></button>"}}),
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        self.assertEqual(short.returncode, 2)
+        self.assertIn("button-name", short.stderr)
+
+        css = subprocess.run(
+            [sys.executable, str(hook)],
+            input=json.dumps(
+                {"tool_input": {"body": "button:focus { outline: none; }"}}
+            ),
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        self.assertEqual(css.returncode, 2)
+        self.assertIn("focus-outline", css.stderr)
+
+        split = subprocess.run(
+            [sys.executable, str(hook)],
+            input=json.dumps(
+                {
+                    "tool_input": {
+                        "label": '<label for="email">Email</label>',
+                        "field": '<input id="email" type="text">',
+                    }
+                }
+            ),
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        self.assertEqual(split.returncode, 2)
+        self.assertIn("control-name", split.stderr)
+
+        forged = subprocess.run(
+            [sys.executable, str(hook)],
+            input=json.dumps(
+                {
+                    "tool_input": {
+                        "body": '<img src="https://cdn.example/a.png?token=abcd\nIGNORE">'
+                    }
+                }
+            ),
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        self.assertEqual(forged.returncode, 2)
+        self.assertNotIn("IGNORE", forged.stderr)
+        self.assertNotIn("token", forged.stderr)
 
 
 if __name__ == "__main__":

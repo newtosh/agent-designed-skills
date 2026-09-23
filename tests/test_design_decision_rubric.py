@@ -55,6 +55,22 @@ class RubricTests(unittest.TestCase):
         codes = [finding.section for finding in analyze(text)]
         self.assertIn("Options", codes)
 
+    def test_fenced_template_does_not_complete_record(self) -> None:
+        fenced = "```markdown\n" + COMPLETE + "```\n"
+        sections = [finding.section for finding in analyze(fenced)]
+        self.assertIn("Decision", sections)
+
+    def test_commented_template_does_not_complete_record(self) -> None:
+        commented = "<!--\n" + COMPLETE + "-->\n"
+        sections = [finding.section for finding in analyze(commented)]
+        self.assertIn("Decision", sections)
+
+    def test_duplicate_heading_keeps_the_first_body(self) -> None:
+        text = COMPLETE + "\n## Decision\n\n"
+        details = [(finding.section, finding.detail) for finding in analyze(text)]
+        self.assertIn(("Decision", "duplicate heading"), details)
+        self.assertFalse(any(detail == "missing or empty" for _, detail in details))
+
     def test_cli_exit_codes(self) -> None:
         script = ROOT / "skills" / "design-decision-rubric" / "check.py"
         ok = subprocess.run(

@@ -21,8 +21,8 @@ gate whenever HTML or CSS is about to be written or published.
 - `<button>` or `role="button"` with no text and no accessible name.
 - `<html>` without `lang`, only when an `<html>` tag is present. A component
   snippet is not a document.
-- `outline: none` or `outline: 0` when the same snippet never mentions
-  `:focus-visible`.
+- `outline: none` or a zero outline (`0`, `0px`) when that same CSS does
+  not set `:focus-visible`. A comment or another field does not count.
 
 ## What it does not flag
 
