@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agent-designed-skills"
+version = "0.1.0"
+description = "Stdlib helpers for fair design and UX decisions in the agent-designed-skills pack"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Jon Newton" }]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["ruff>=0.8", "black>=24.0"]
+
+[tool.setuptools]
+packages = [
+  "design_decision_rubric",
+  "ux_heuristic_audit",
+  "accessibility_gate",
+]
+
+[tool.setuptools.package-dir]
+design_decision_rubric = "skills/design-decision-rubric"
+ux_heuristic_audit = "skills/ux-heuristic-audit"
+accessibility_gate = "skills/accessibility-gate"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+src = ["skills", "hooks", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "ANN"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["ANN201"]
+
+[tool.black]
+line-length = 88
+target-version = ["py311"]

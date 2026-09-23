@@ -1,0 +1,58 @@
+{
+  "accessibility": {
+    "repo": "https://github.com/addyosmani/web-quality-skills.git",
+    "source_prefix": "skills/accessibility",
+    "target_prefix": "skills/accessibility",
+    "license": "MIT",
+    "copyright": "Addy Osmani"
+  },
+  "apple-design": {
+    "repo": "https://github.com/emilkowalski/skills.git",
+    "source_prefix": "skills/apple-design",
+    "target_prefix": "skills/apple-design",
+    "license": "MIT",
+    "copyright": "Emil Kowalski"
+  },
+  "beautiful-shadows": {
+    "repo": "https://github.com/MengTo/Skills.git",
+    "source_prefix": "agent-skills/web-design/beautiful-shadows",
+    "target_prefix": "skills/beautiful-shadows",
+    "license": "MIT",
+    "copyright": "Meng To"
+  },
+  "better-interface": {
+    "repo": "https://github.com/jakubkrehel/skills.git",
+    "source_prefix": "skills/better-interface",
+    "target_prefix": "skills/better-interface",
+    "license": "MIT",
+    "copyright": "Jakub Krehel"
+  },
+  "emil-design-eng": {
+    "repo": "https://github.com/emilkowalski/skills.git",
+    "source_prefix": "skills/emil-design-eng",
+    "target_prefix": "skills/emil-design-eng",
+    "license": "MIT",
+    "copyright": "Emil Kowalski"
+  },
+  "frontend-design": {
+    "repo": "https://github.com/anthropics/skills.git",
+    "source_prefix": "skills/frontend-design",
+    "target_prefix": "skills/frontend-design",
+    "license": "Apache-2.0",
+    "copyright": "Anthropic"
+  },
+  "interaction-design": {
+    "repo": "https://github.com/wshobson/agents.git",
+    "source_prefix": "plugins/ui-design/skills/interaction-design",
+    "target_prefix": "skills/interaction-design",
+    "license": "MIT",
+    "copyright": "Seth Hobson"
+  },
+  "shadcn": {
+    "repo": "https://github.com/shadcn-ui/ui.git",
+    "source_prefix": "skills/shadcn",
+    "target_prefix": "skills/shadcn",
+    "license": "MIT",
+    "copyright": "shadcn"
+  }
+}
