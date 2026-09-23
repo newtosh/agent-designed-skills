@@ -1,4 +1,4 @@
-# agent-designed-skills
+# agent-design-skills
 
 Claude Code skill pack for fairer, higher-quality design and UX decisions
 without turn-by-turn steering. Portable: clone it, run `install.sh`, done.
@@ -118,8 +118,8 @@ one-time `git subtree add` yourself (see git history on
 ## Install
 
 ```bash
-git clone <this-repo> ~/bin/src/agent-designed-skills   # or wherever
-~/bin/src/agent-designed-skills/install.sh
+git clone <this-repo> ~/bin/src/agent-design-skills   # or wherever
+~/bin/src/agent-design-skills/install.sh
 ```
 
 Symlinks each `skills/<name>` and `hooks/<file>` into
