@@ -7,8 +7,10 @@ The CLI includes an MCP server that lets AI assistants search, browse, view, and
 ## Setup
 
 ```bash
-shadcn mcp        # start the MCP server (stdio)
-shadcn mcp init   # write config for your editor
+# Use the project's package runner. Examples use npx.
+# Substitute `pnpm dlx` or `bunx --bun` when that is the project runner.
+npx shadcn@latest mcp        # start the MCP server (stdio)
+npx shadcn@latest mcp init   # write config for your editor
 ```
 
 Editor config files:

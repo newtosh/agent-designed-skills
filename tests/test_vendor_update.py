@@ -41,6 +41,16 @@ class VendorUpdateTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("unknown vendored skill", result.stderr)
 
+    def test_untracked_file_exits_before_clone(self) -> None:
+        extra = ROOT / ".vendor-update-untracked"
+        extra.write_text("x")
+        try:
+            result = _run(["accessibility"])
+        finally:
+            extra.unlink()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("not clean", result.stderr)
+
     def test_dirty_tree_exits_before_clone(self) -> None:
         readme = ROOT / "README.md"
         original = readme.read_text()

@@ -18,7 +18,9 @@ gate whenever HTML or CSS is about to be written or published.
   `<textarea>` with no accessible name. A wrapping `<label>`, a matching
   `label for`, `aria-label`, or `aria-labelledby` counts. The gate does not
   check that the label text is meaningful.
-- `<button>` or `role="button"` with no text and no accessible name.
+- `<button>` or `role="button"` with no text and no accessible name. A
+  descendant `img` alt counts. `alt` on the button element itself does not.
+  An `img` that is the button uses its own alt.
 - `<html>` without `lang`, only when an `<html>` tag is present. A component
   snippet is not a document.
 - `outline: none` or a zero outline (`0`, `0px`) when that same CSS does

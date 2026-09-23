@@ -58,6 +58,10 @@ def analyze(text: str) -> list[Finding]:
     for title in duplicates:
         if title in REQUIRED_SECTIONS:
             findings.append(Finding(title, "duplicate heading"))
+    present = [title for title in sections if title in REQUIRED_SECTIONS]
+    expected = [title for title in REQUIRED_SECTIONS if title in present]
+    if present != expected:
+        findings.append(Finding("Order", "required headings are out of order"))
     for title in REQUIRED_SECTIONS:
         body = sections.get(title, "")
         if not body:

@@ -58,6 +58,13 @@ class AuditTests(unittest.TestCase):
             any("not observed, but a finding" in detail for detail in details)
         )
 
+    def test_missing_findings_heading(self) -> None:
+        details = [finding.detail for finding in analyze(coverage())]
+        self.assertIn("missing heading", details)
+
+    def test_empty_findings_section_is_complete(self) -> None:
+        self.assertEqual(analyze(coverage() + "\n## Findings\n"), [])
+
     def test_bad_severity(self) -> None:
         text = coverage() + "\n" + FINDING.replace("severity: 3", "severity: 9")
         details = [finding.detail for finding in analyze(text)]

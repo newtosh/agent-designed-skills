@@ -71,6 +71,15 @@ class RubricTests(unittest.TestCase):
         self.assertIn(("Decision", "duplicate heading"), details)
         self.assertFalse(any(detail == "missing or empty" for _, detail in details))
 
+    def test_required_headings_must_follow_order(self) -> None:
+        recommendation = (
+            "## Recommendation\n"
+            "Option A. The screen is the first publish, not the editor.\n"
+        )
+        text = recommendation + "\n" + COMPLETE.replace(recommendation, "")
+        details = [finding.detail for finding in analyze(text)]
+        self.assertIn("required headings are out of order", details)
+
     def test_cli_exit_codes(self) -> None:
         script = ROOT / "skills" / "design-decision-rubric" / "check.py"
         ok = subprocess.run(

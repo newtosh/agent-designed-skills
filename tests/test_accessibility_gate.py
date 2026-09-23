@@ -104,6 +104,22 @@ class GateTests(unittest.TestCase):
         self.assertNotIn("token", details[0])
         self.assertNotIn("forged", details[0])
 
+    def test_void_image_does_not_keep_the_button_open(self) -> None:
+        self.assertIn("button-name", codes('<button><img alt=""></button>'))
+
+    def test_element_alt_is_not_a_button_or_control_name(self) -> None:
+        self.assertIn("button-name", codes('<button alt="Close"></button>'))
+        self.assertIn("control-name", codes('<input alt="Email">'))
+        self.assertEqual(codes('<img role="button" alt="Go">'), [])
+
+    def test_css_comment_does_not_count_as_focus_visible(self) -> None:
+        html = (
+            "<style>button:focus { outline: none; }"
+            "/* button:focus-visible { outline: 2px solid red; } */"
+            "</style><button>Go</button>"
+        )
+        self.assertIn("focus-outline", codes(html))
+
     def test_hook_blocks_and_fails_open(self) -> None:
         hook = ROOT / "hooks" / "accessibility-gate.py"
         blocked = subprocess.run(

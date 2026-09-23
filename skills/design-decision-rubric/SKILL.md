@@ -71,6 +71,7 @@ python3 ~/.claude/skills/design-decision-rubric/check.py <file>
 # or: python3 ~/.claude/skills/design-decision-rubric/check.py -
 ```
 
-Exit 0 means every section is present and Options has two items. The
+Exit 0 means every section is present, in that order, and Options has two
+items. The
 checker does not judge whether the tradeoff is honest. Read the record
 again before treating exit 0 as agreement.

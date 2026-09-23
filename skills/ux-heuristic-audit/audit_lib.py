@@ -39,7 +39,7 @@ class Finding:
     detail: str
 
 
-def _section(text: str, title: str) -> str:
+def _section(text: str, title: str) -> str | None:
     matches = list(_HEADING.finditer(text))
     for index, match in enumerate(matches):
         if match.group(1).strip() != title:
@@ -47,7 +47,7 @@ def _section(text: str, title: str) -> str:
         start = match.end()
         end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
         return text[start:end].strip()
-    return ""
+    return None
 
 
 def _findings_block(body: str) -> list[dict[str, str]]:
@@ -83,7 +83,12 @@ def analyze(text: str) -> list[Finding]:
         for hid in unknown:
             findings.append(Finding("Coverage", f"unknown id {hid}"))
 
-    rows = _findings_block(_section(text, "Findings"))
+    findings_body = _section(text, "Findings")
+    if findings_body is None:
+        findings.append(Finding("Findings", "missing heading"))
+        rows: list[dict[str, str]] = []
+    else:
+        rows = _findings_block(findings_body)
     seen: set[str] = set()
     for row in rows:
         hid = row.get("id", "")

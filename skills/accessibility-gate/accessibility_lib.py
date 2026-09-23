@@ -13,6 +13,22 @@ from dataclasses import dataclass
 from html.parser import HTMLParser
 
 _SKIP_INPUT_TYPES = {"hidden", "submit", "button", "reset", "image"}
+_VOID_ELEMENTS = {
+    "area",
+    "base",
+    "br",
+    "col",
+    "embed",
+    "hr",
+    "img",
+    "input",
+    "link",
+    "meta",
+    "param",
+    "source",
+    "track",
+    "wbr",
+}
 _OUTLINE_REMOVED = re.compile(
     r"outline\s*:\s*(?:none|0+(?:\.0+)?"
     r"(?:px|pt|pc|in|cm|mm|em|rem|ex|ch|vw|vh|vmin|vmax|%)?)"
@@ -20,6 +36,7 @@ _OUTLINE_REMOVED = re.compile(
     re.IGNORECASE,
 )
 _FOCUS_VISIBLE = re.compile(r":focus-visible", re.IGNORECASE)
+_CSS_COMMENT = re.compile(r"/\*.*?\*/", re.DOTALL)
 _LOCATOR_LIMIT = 80
 
 
@@ -86,8 +103,12 @@ class _Scanner(HTMLParser):
         if name in {"input", "select", "textarea"}:
             self.controls.append(_Control(name, attr, self._label_depth > 0))
         if name == "button" or attr.get("role", "").lower() == "button":
-            self._open_buttons.append(_ButtonFrame(attr, [], len(self._stack)))
-        self._stack.append(name)
+            text: list[str] = []
+            if name == "img" and attr.get("alt", "").strip():
+                text.append(attr["alt"].strip())
+            self._open_buttons.append(_ButtonFrame(attr, text, len(self._stack)))
+        if name not in _VOID_ELEMENTS:
+            self._stack.append(name)
         style = attr.get("style", "")
         if style:
             self.style_chunks.append(style)
@@ -106,6 +127,11 @@ class _Scanner(HTMLParser):
                 frame = self._open_buttons.pop()
                 self.buttons.append((frame.attrs, "".join(frame.text)))
 
+    def flush_open_buttons(self) -> None:
+        while self._open_buttons:
+            frame = self._open_buttons.pop(0)
+            self.buttons.append((frame.attrs, "".join(frame.text)))
+
     def handle_data(self, data: str) -> None:
         if self._in_style:
             self.style_chunks.append(data)
@@ -120,11 +146,7 @@ def looks_like_markup(text: str) -> bool:
 def _has_accessible_name(attrs: dict[str, str]) -> bool:
     if attrs.get("aria-label", "").strip():
         return True
-    if attrs.get("aria-labelledby", "").strip():
-        return True
-    if attrs.get("alt", "").strip():
-        return True
-    return False
+    return bool(attrs.get("aria-labelledby", "").strip())
 
 
 def _control_named(control: _Control, label_fors: set[str]) -> bool:
@@ -160,6 +182,7 @@ def analyze(text: str) -> list[Finding]:
     scanner = _Scanner()
     scanner.feed(text)
     scanner.close()
+    scanner.flush_open_buttons()
     findings: list[Finding] = []
 
     html_lang = (scanner.html_attrs or {}).get("lang", "").strip()
@@ -204,7 +227,7 @@ def analyze(text: str) -> list[Finding]:
             )
         )
 
-    css = _outline_css(text, scanner.style_chunks)
+    css = _CSS_COMMENT.sub("", _outline_css(text, scanner.style_chunks))
     if _OUTLINE_REMOVED.search(css) and not _FOCUS_VISIBLE.search(css):
         findings.append(
             Finding(

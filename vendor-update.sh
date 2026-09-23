@@ -48,7 +48,7 @@ update_one() {
     echo "vendor-update.sh: target_prefix must be skills/<name>" >&2
     exit 1
   fi
-  if ! git diff --quiet || ! git diff --cached --quiet; then
+  if [[ -n "$(git status --porcelain)" ]]; then
     echo "vendor-update.sh: working tree is not clean; commit or stash first" >&2
     exit 1
   fi
@@ -65,7 +65,11 @@ update_one() {
       exit 1
       ;;
   esac
-  _vendor_remote="vendor-tmp-$name"
+  _vendor_remote="vendor-tmp-${name}-$$"
+  if git remote get-url "$_vendor_remote" >/dev/null 2>&1; then
+    echo "vendor-update.sh: remote ${_vendor_remote} already exists" >&2
+    exit 1
+  fi
 
   git clone -q -- "$repo_url" "$_vendor_tmp/src"
   (
@@ -73,7 +77,6 @@ update_one() {
     git subtree split -q --prefix="$src_prefix" -b split-branch
   )
 
-  git remote remove "$_vendor_remote" 2>/dev/null || true
   git remote add "$_vendor_remote" "$_vendor_tmp/src"
   _vendor_remote_added=1
   git fetch -q "$_vendor_remote" split-branch

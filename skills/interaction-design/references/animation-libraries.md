@@ -61,7 +61,7 @@ function PulseButton() {
 ### Layout Animations
 
 ```tsx
-import { motion, LayoutGroup } from "framer-motion";
+import { motion, Reorder } from "framer-motion";
 
 // Shared layout animation
 function TabIndicator({ activeTab, tabs }) {
